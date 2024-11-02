@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import Departamento from './Departamento'
+import Direccion from './Direccion'
+
 
 export default class Municipio extends BaseModel {
   @column({ isPrimary: true })
@@ -11,6 +13,14 @@ export default class Municipio extends BaseModel {
 
   @column()
   public codigoPostal: string
+
+  @column()
+  public departamento_id: string
+
+  @hasMany(() => Direccion, {
+    foreignKey: 'municipio_id'
+  })
+  public direcciones: HasMany<typeof Direccion>
 
   @belongsTo(() => Departamento, {
     foreignKey: 'departamento_id'

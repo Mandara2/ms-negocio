@@ -11,7 +11,6 @@ export default class extends BaseSchema {
       table.string('tipoDocumento')
       table.date('fechaNacimiento')
       table.string('usuario_id').unsigned().references('usuarios.id')
-      //table.string(empresa_id).unsigned().references(empresas.id)
 
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
