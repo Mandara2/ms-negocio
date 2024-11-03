@@ -7,8 +7,8 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
-      table.string('telefono')
-      table.string('usuario_id').unsigned().references('usuarios.id')
+      table.string('telefono').notNullable()
+      table.date('fechaNacimiento').notNullable()
       table.string('conductor_id').unsigned().references('conductores.id')
 
       table.timestamp('created_at', { useTz: true })

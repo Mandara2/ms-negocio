@@ -7,10 +7,12 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
-      table.string('barrio')
-      table.string('direccion')
+      table.string('localidad').notNullable()
+      table.string('tipoDireccion').notNullable()
+      table.string('calle').notNullable()
+      table.string('numeroDireccion').notNullable()
       table.string('referencias')
-      table.string('municipio_id').unsigned().references('municipios.id')
+      table.string('municipio_id').unsigned().references('municipios.id').onDelete('CASCADE').notNullable()
       
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

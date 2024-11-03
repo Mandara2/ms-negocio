@@ -7,10 +7,10 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
-      table.string('telefono')
-      table.string('numeroLicencia')
-      table.date('fechaVencimientoLicencia')
-      table.string('usuario_id').unsigned().references('usuarios.id')
+      table.string('telefono').notNullable()
+      table.string('numeroLicencia').notNullable()
+      table.date('fechaVencimientoLicencia').notNullable()
+      table.date('fechaNacimiento').notNullable()
 
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

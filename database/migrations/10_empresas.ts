@@ -7,11 +7,11 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
-      table.string('NIT')
-      table.string('tipoEmpresa')
+      table.string('nit').notNullable()
+      table.string('tipoEmpresa').notNullable()
       table.string('direccionFiscal')
       table.string('cliente_id').unsigned().references('clientes.id')
-      table.string('empresa_id').unsigned().references('empresa.id')
+      table.string('personaNatural_id').unsigned().references('personaNatural.id')
       
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

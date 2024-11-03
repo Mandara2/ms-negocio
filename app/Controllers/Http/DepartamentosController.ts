@@ -5,7 +5,7 @@ export default class DepartamentosController { //se encarga de hacer las operaci
     public async find({ request, params }: HttpContextContract) {
         if (params.id) {
             let theDepartamento: Departamento = await Departamento.findOrFail(params.id)
-            await theDepartamento.load("municipio")
+            await theDepartamento.load('municipios')
             return theDepartamento;
         } else {
             const data = request.all()
@@ -30,7 +30,7 @@ export default class DepartamentosController { //se encarga de hacer las operaci
         const theDepartamento: Departamento = await Departamento.findOrFail(params.id);
         const body = request.body();
         theDepartamento.nombre = body.nombre;
-        theDepartamento.capacity = body.capacity;
+        theDepartamento.region = body.region;
         return await theDepartamento.save();
     }
 

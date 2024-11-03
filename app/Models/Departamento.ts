@@ -10,9 +10,6 @@ export default class Departamento extends BaseModel {
   public nombre: string
 
   @column()
-  public codigoDepartamento: string
-
-  @column()
   public region: string
 
   @hasMany(() => Municipio, { //Este es el N

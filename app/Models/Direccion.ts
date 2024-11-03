@@ -8,10 +8,16 @@ export default class Direccione extends BaseModel {
   public id: number
 
   @column()
-  public barrio: string
+  public localidad: string
 
   @column()
-  public direccion: string
+  public tipoDireccion: string
+
+  @column()
+  public calle: string
+
+  @column()
+  public numeroDireccion: string
 
   @column()
   public referencias: string

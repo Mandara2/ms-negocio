@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
-import Usuario from './Usuario'
+import { BaseModel, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
+import Dueno from './Dueno'
 
 export default class Conductor extends BaseModel {
   @column({ isPrimary: true })
@@ -16,12 +16,12 @@ export default class Conductor extends BaseModel {
   public fechaVencimientoLicencia: Date
 
   @column()
-  public usuario_id: string
+  public fechaNacimiento: Date
 
-  @belongsTo(() => Usuario, {
-    foreignKey: 'usuario_id'
+  @hasOne(() => Dueno, {
+    foreignKey: 'conductor_id'
   })
-  public usuario: BelongsTo<typeof Usuario>
+  public dueno: HasOne<typeof Dueno>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
