@@ -15,5 +15,10 @@ export default class AdministradorValidator {
   })
 
   
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'tipo.alphaNum': 'El tipo solo acepta espacios, guiones bajos y medios',
+    'tipo.required': 'El campo tipo es obligatorio',
+    'telefono.required': 'El campo telefono es obligatorio',
+    'telefono.regex': 'El campo telefono solo acepta numeros y guiones'
+  }
 }

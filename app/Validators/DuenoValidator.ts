@@ -21,5 +21,11 @@ export default class DuenoValidator {
   })
 
   
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'telfono.required': 'El campo telefono es obligatorio',
+    'telefono.regex': 'El campo telefono solo acepta numeros y guiones',
+    'fechaNacimiento.date.format': 'La fechaNacimiento debe estar en formato yyyy-MM-dd',
+    'fechaNacimiento.required': 'La fecha de nacimiento es obligatoria',
+    'conductor_id.exist': 'El conductor_id debe existir en la base de datos'
+  }
 }

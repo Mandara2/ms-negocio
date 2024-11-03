@@ -15,5 +15,9 @@ export default class ClienteValidator {
   })
 
  
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'telefono.required': 'El campo telefono es obligatorio',
+    'telefono.regex': 'El campo telefono solo puede contener numeros y guiones',
+    'cantidadPedidosRealizados.unsigned': 'El campo cantidadPedidosRealizados no puede ser negativo' 
+  }
 }

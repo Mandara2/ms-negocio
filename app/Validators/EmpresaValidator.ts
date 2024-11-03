@@ -15,8 +15,7 @@ export default class EmpresaValidator {
 
     direccionFiscal:schema.string([rules.alphaNum({
       allow: ['space', 'underscore', 'dash']
-    }), rules.required()]),
-
+    })]),
     cliente_id: schema.number([
       rules.exists({ table: 'cliente', column: 'id' })
     ]),
@@ -27,5 +26,13 @@ export default class EmpresaValidator {
   })
 
 
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'telefono.required': 'El campo telefono es obligatorio',
+    'telefono.regex': 'El campo telefono solo acepta numeros y guiones',
+    'tipoEmpresa.alphaNum': 'El campo tipoEmpresa solo acepta como caracteres especiales el espacio, el guion bajo y medio',
+    'tipoEmpresa.required': 'El campo tipoEmpresa es obligatorio',
+    'direccionFiscal': 'El campo direccionFiscal solo acepta como caracteres especiales el espacio, el guion bajo y medio',
+    'cliente_id.exists': 'El cliente_id debe existir en la base de datos',
+    'personaNatural_id.exists': 'La personaNatural_id debe existir en la base de datos'
+  }
 }
