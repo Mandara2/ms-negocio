@@ -9,7 +9,7 @@ export default class extends BaseSchema {
 
       table.string('telefono').notNullable()
       table.date('fechaNacimiento').notNullable()
-      table.string('conductor_id').unsigned().references('conductores.id')
+      table.integer('conductor_id').unsigned().references('conductores.id')
 
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

@@ -23,7 +23,7 @@ export default class Direccione extends BaseModel {
   public referencias: string
 
   @column()
-  public municipio_id: string
+  public municipio_id: number
   
   @hasOne(() => CentroDistribucion, {
     foreignKey: 'municipio_id'

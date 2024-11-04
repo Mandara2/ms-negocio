@@ -15,7 +15,7 @@ export default class Municipio extends BaseModel {
   public codigoPostal: string
 
   @column()
-  public departamento_id: string
+  public departamento_id: number
 
   @hasMany(() => Direccion, {
     foreignKey: 'municipio_id'

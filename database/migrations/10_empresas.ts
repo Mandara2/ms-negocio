@@ -10,8 +10,8 @@ export default class extends BaseSchema {
       table.string('nit').notNullable()
       table.string('tipoEmpresa').notNullable()
       table.string('direccionFiscal')
-      table.string('cliente_id').unsigned().references('clientes.id')
-      table.string('personaNatural_id').unsigned().references('personaNatural.id')
+      //table.integer('cliente_id').unsigned().references('clientes.id')
+      //table.integer('personaNatural_id').unsigned().references('personaNatural.id')
       
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
@@ -19,6 +19,9 @@ export default class extends BaseSchema {
   }
 
   public async down () {
-    this.schema.dropTable(this.tableName)
+    this.schema.alterTable('empresas', (table) => {
+      table.dropForeign(['cliente_id'])
+    })
+    this.schema.dropTable('empresas')
   }
 }

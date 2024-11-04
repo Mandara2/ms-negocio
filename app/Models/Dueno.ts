@@ -13,7 +13,7 @@ export default class Dueno extends BaseModel {
   public fechaNacimiento: Date
 
   @column()
-  public conductor_id: string
+  public conductor_id: number
 
   @belongsTo(() => Conductor, {
     foreignKey: 'conductor_id'

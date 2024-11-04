@@ -13,7 +13,7 @@ export default class CentroDistribucion extends BaseModel {
   public capacidadAlmacenamiento: number
 
   @column()
-  public direccion_id: string
+  public direccion_id: number
 
   @belongsTo(() => Direccion, {
     foreignKey: 'direccion_id'

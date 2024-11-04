@@ -11,11 +11,11 @@ export default class MunicipioSeeder extends BaseSeeder {
 
     // Creamos los municipios y asignamos el `departamento_id`
     await Municipio.createMany([
-      { nombre: 'Medellín', codigoPostal: '050001', departamento_id: antioquia?.id?.toString()},
-      { nombre: 'Cali', codigoPostal: '760001', departamento_id: valleDelCauca?.id?.toString()},
-      { nombre: 'Barranquilla', codigoPostal: '080001', departamento_id: atlantico?.id?.toString()},
-      { nombre: 'Envigado', codigoPostal: '055422', departamento_id: antioquia?.id?.toString()},
-      { nombre: 'Palmira', codigoPostal: '763531', departamento_id: valleDelCauca?.id?.toString()},
+      { nombre: 'Medellín', codigoPostal: '050001', departamento_id: antioquia?.id},
+      { nombre: 'Cali', codigoPostal: '760001', departamento_id: valleDelCauca?.id},
+      { nombre: 'Barranquilla', codigoPostal: '080001', departamento_id: atlantico?.id},
+      { nombre: 'Envigado', codigoPostal: '055422', departamento_id: antioquia?.id},
+      { nombre: 'Palmira', codigoPostal: '763531', departamento_id: valleDelCauca?.id},
     ])
   }
 }

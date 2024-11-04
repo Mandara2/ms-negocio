@@ -17,7 +17,7 @@ export default class DireccionSeeder extends BaseSeeder {
         calle: 'Cra 43A',
         numeroDireccion: '25-50',
         referencias: 'Cerca al parque Lleras',
-        municipio_id: medellin?.id!.toString(),
+        municipio_id: medellin?.id!,
       },
       {
         localidad: 'Ciudad Jardín',
@@ -25,14 +25,14 @@ export default class DireccionSeeder extends BaseSeeder {
         calle: 'Calle 15',
         numeroDireccion: '80-60',
         referencias: 'Frente al centro comercial',
-        municipio_id: cali?.id!.toString()},
+        municipio_id: cali?.id!},
       {
         localidad: 'El Prado',
         tipoDireccion: 'Residencial',
         calle: 'Calle 72',
         numeroDireccion: '15-45',
         referencias: 'Cerca al colegio Distrital',
-        municipio_id: barranquilla?.id!.toString(),
+        municipio_id: barranquilla?.id!,
       },
       {
         localidad: 'Laureles',
@@ -40,7 +40,7 @@ export default class DireccionSeeder extends BaseSeeder {
         calle: 'Cra 70',
         numeroDireccion: '45-23',
         referencias: 'Cerca a la segunda parque',
-        municipio_id: medellin?.id!.toString(),
+        municipio_id: medellin?.id!,
       },
       {
         localidad: 'San Fernando',
@@ -48,7 +48,7 @@ export default class DireccionSeeder extends BaseSeeder {
         calle: 'Av Roosevelt',
         numeroDireccion: '32-12',
         referencias: 'Al lado del hospital departamental',
-        municipio_id: cali?.id!.toString()},
+        municipio_id: cali?.id!},
     ])
   }
 }

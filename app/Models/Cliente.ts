@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
-import Empresa from './Empresa'
+//import Empresa from './Empresa'
 import PersonaNatural from './PersonaNatural'
 
 export default class Cliente extends BaseModel {
@@ -13,10 +13,10 @@ export default class Cliente extends BaseModel {
   @column()
   public cantidadPedidosRealizados: number
 
-  @hasOne(() => Empresa, {
+/*   @hasOne(() => Empresa, {
     foreignKey: 'cliente_id'
   })
-  public empresa: HasOne<typeof Empresa>
+  public empresa: HasOne<typeof Empresa> */
 
   @hasOne(() => PersonaNatural, {
     foreignKey: 'cliente_id'

@@ -12,7 +12,7 @@ export default class extends BaseSchema {
       table.string('calle').notNullable()
       table.string('numeroDireccion').notNullable()
       table.string('referencias')
-      table.string('municipio_id').unsigned().references('municipios.id').onDelete('CASCADE').notNullable()
+      table.integer('municipio_id').unsigned().references('municipios.id').onDelete('CASCADE').notNullable()
       
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

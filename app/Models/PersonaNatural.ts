@@ -17,9 +17,7 @@ export default class PersonaNatural extends BaseModel {
   public fechaNacimiento: Date
 
   @column()
-  public cliente_id: string
-
-  //Revisaaaaaaaaaaaaar
+  public cliente_id: number
 
   @hasOne(() => Empresa, {
     foreignKey: 'empresa_id'
