@@ -5,9 +5,8 @@ export default class MunicipiosController { //se encarga de hacer las operacione
     public async find({ request, params }: HttpContextContract) {
         if (params.id) {
             let theMunicipio: Municipio = await Municipio.findOrFail(params.id)
-            //await theMunicipio.load("departamento")
-            
-            //await theMunicipio.load('direcciones')
+            await theMunicipio.load("departamento")
+            await theMunicipio.load('direcciones')
             return theMunicipio;
         } else {
             const data = request.all()

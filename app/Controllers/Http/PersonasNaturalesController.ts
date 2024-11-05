@@ -7,8 +7,9 @@ import PersonaNatural from 'App/Models/PersonaNatural';
 
 export default class personasNaturalessController { //se encarga de hacer las operaciones de CRUD
     public async find({ request, params }: HttpContextContract) {
+        
         let thepersonaNatural;
-    
+        await thepersonaNatural.load("cliente")
         try {
           if (params.id) {
             thepersonaNatural = await PersonaNatural.findOrFail(params.id);

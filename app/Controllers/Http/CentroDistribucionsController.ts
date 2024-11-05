@@ -5,7 +5,7 @@ export default class CentroDistribucionsController { //se encarga de hacer las o
     public async find({ request, params }: HttpContextContract) {
         if (params.id) {
             let theCentroDistribucion: CentroDistribucion = await CentroDistribucion.findOrFail(params.id)
-            //await theCentroDistribucion.load("direcciones")
+            await theCentroDistribucion.load("direcciones")
             return theCentroDistribucion;
         } else {
             const data = request.all()
