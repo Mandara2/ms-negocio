@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
 
       table.string('telefono').notNullable()
-      table.integer('cantidadPedidosRealizados')
+      table.integer('cantidad_pedidos_realizados')
       table.string('usuario_id').notNullable()
 
       table.timestamp('created_at', { useTz: true })

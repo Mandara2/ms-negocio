@@ -9,10 +9,13 @@ export default class personasNaturalessController { //se encarga de hacer las op
     public async find({ request, params }: HttpContextContract) {
         
         let thepersonaNatural;
-        await thepersonaNatural.load("cliente")
+        
         try {
           if (params.id) {
+
             thepersonaNatural = await PersonaNatural.findOrFail(params.id);
+
+            await thepersonaNatural.load("cliente")
     
             // Llamada al microservicio de usuarios
             const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${thepersonaNatural.usuario_id}`, {

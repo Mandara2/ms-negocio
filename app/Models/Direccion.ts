@@ -26,14 +26,14 @@ export default class Direccione extends BaseModel {
   public municipio_id: number
   
   @hasOne(() => CentroDistribucion, {
-    foreignKey: 'municipio_id'
+    foreignKey: 'direccion_id'
   })
   public centrosDistribucion: HasOne <typeof CentroDistribucion>
 
-    @belongsTo(() => Municipio, {
+  @belongsTo(() => Municipio, {
       foreignKey: 'municipio_id'
     })
-    public municipio: BelongsTo<typeof Municipio>
+  public municipio: BelongsTo<typeof Municipio>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

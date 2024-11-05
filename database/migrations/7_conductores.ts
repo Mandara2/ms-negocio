@@ -9,9 +9,9 @@ export default class extends BaseSchema {
 
       table.string('usuario_id').notNullable()
       table.string('telefono').notNullable()
-      table.string('numeroLicencia').notNullable()
-      table.date('fechaVencimientoLicencia').notNullable()
-      table.date('fechaNacimiento').notNullable()
+      table.string('numero_licencia').notNullable()
+      table.date('fecha_vencimiento_licencia').notNullable()
+      table.date('fecha_nacimiento').notNullable()
 
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
