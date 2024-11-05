@@ -7,6 +7,9 @@ export default class Conductor extends BaseModel {
   public id: number
 
   @column()
+  public usuario_id: string
+
+  @column()
   public telefono: string
 
   @column()

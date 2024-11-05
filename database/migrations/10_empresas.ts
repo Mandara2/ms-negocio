@@ -10,8 +10,8 @@ export default class extends BaseSchema {
       table.string('nit').notNullable()
       table.string('tipoEmpresa').notNullable()
       table.string('direccionFiscal')
-      //table.integer('cliente_id').unsigned().references('clientes.id')
-      //table.integer('personaNatural_id').unsigned().references('personaNatural.id')
+      table.integer('cliente_id').unsigned().references('clientes.id')
+      table.integer('personaNatural_id').unsigned().references('personaNatural.id')
       
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

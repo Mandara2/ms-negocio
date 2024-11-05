@@ -5,7 +5,7 @@ export default class EmpresasController { //se encarga de hacer las operaciones 
     public async find({ request, params }: HttpContextContract) {
         if (params.id) {
             let theEmpresa: Empresa = await Empresa.findOrFail(params.id)
-            await theEmpresa.load("cliente")
+            //await theEmpresa.load("cliente")
             return theEmpresa;
         } else {
             const data = request.all()
@@ -16,9 +16,7 @@ export default class EmpresasController { //se encarga de hacer las operaciones 
             } else {
                 return await Empresa.query() //DEVUELVE TODOS LOS TEATROS SI NO SE ESPECIFICA EL ID
             }
-
         }
-
     }
     public async create({ request }: HttpContextContract) { 
         const body = request.body();

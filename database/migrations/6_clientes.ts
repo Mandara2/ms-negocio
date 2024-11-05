@@ -9,6 +9,7 @@ export default class extends BaseSchema {
 
       table.string('telefono').notNullable()
       table.integer('cantidadPedidosRealizados')
+      table.string('usuario_id').notNullable()
 
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

@@ -1,26 +1,52 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Conductores from 'App/Models/Conductor';
+import axios from 'axios';
+import Env from '@ioc:Adonis/Core/Env';
+import { Exception } from '@adonisjs/core/build/standalone';
 
 export default class ConductoresController { //se encarga de hacer las operaciones de CRUD
     public async find({ request, params }: HttpContextContract) {
-        if (params.id) {
-            let theConductor: Conductores = await Conductores.findOrFail(params.id)
-            return theConductor;
-        } else {
-            const data = request.all()
-            if ("page" in data && "per_page" in data) {
-                const page = request.input('page', 1);
-                const perPage = request.input("per_page", 20);
-                return await Conductores.query().paginate(page, perPage) //devuelvame una fraccion de todos los teatros
-            } else {
-                return await Conductores.query() //DEVUELVE TODOS LOS TEATROS SI NO SE ESPECIFICA EL ID
+        let theConductor;
+    
+        try {
+          if (params.id) {
+            theConductor = await Conductores.findOrFail(params.id);
+    
+            // Llamada al microservicio de usuarios
+            const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${theConductor.usuario_id}`, {
+              headers: { Authorization: request.headers().authorization || '' }
+            });
+    
+            // Verificar si userResponse.data es null o está vacío
+            if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
+              throw new Exception('No se encontró información de usuario en el microservicio', 404);
             }
-
+    
+            // Combinar la respuesta con los datos del cliente
+            return { cliente: theConductor, usuario: userResponse.data };
+          } else {
+            const data = request.all();
+            if ("page" in data && "per_page" in data) {
+              const page = request.input('page', 1);
+              const perPage = request.input("per_page", 20);
+              return await Conductores.query().paginate(page, perPage);
+            } else {
+              return await Conductores.query();
+            }
+          }
+        } catch (error) {
+          // Si hay un error, lanzar una excepción con un mensaje y código de estado
+          throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
         }
-
-    }
+      }
     public async create({ request }: HttpContextContract) { 
         const body = request.body();
+        const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${body.usuario_id}`, {
+          headers: { Authorization: request.headers().authorization || '' }
+        });
+        if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
+          throw new Error('No se encontró información de usuario, verifique que el codigo sea correcto');
+        }
         const theConductor: Conductores = await Conductores.create(body);
         return theConductor;
     }
@@ -28,6 +54,14 @@ export default class ConductoresController { //se encarga de hacer las operacion
     public async update({ params, request }: HttpContextContract) {
         const theConductor: Conductores = await Conductores.findOrFail(params.id);
         const body = request.body();
+        const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${body.usuario_id}`, {
+            headers: { Authorization: request.headers().authorization || '' }
+          });
+  
+          if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
+            throw new Error('No se encontró información de usuario, verifique que el codigo sea correcto');
+          }
+        theConductor.usuario_id = theConductor.usuario_id;
         theConductor.telefono = body.telefono;
         theConductor.fechaNacimiento = body.fechaNacimiento
         theConductor.numeroLicencia = body.numeroLicencia;

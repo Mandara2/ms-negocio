@@ -8,6 +8,9 @@ export default class PersonaNatural extends BaseModel {
   public id: number
 
   @column()
+  public usuario_id: string
+
+  @column()
   public identificacion: string
 
   @column()
