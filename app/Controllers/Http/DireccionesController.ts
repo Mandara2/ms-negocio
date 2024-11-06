@@ -1,48 +1,85 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Direccion from 'App/Models/Direccion';
+import { Exception } from '@adonisjs/core/build/standalone';
+import DireccionValidator from 'App/Validators/DireccionValidator'; // Importar el validador
 
-export default class DireccionesController { //se encarga de hacer las operaciones de CRUD
-    public async find({ request, params }: HttpContextContract) {
-        if (params.id) {
-            let theDireccion: Direccion = await Direccion.findOrFail(params.id)
-            await theDireccion.load("municipio")
-            await theDireccion.load('centrosDistribucion')
-            return theDireccion;
-        } else {
-            const data = request.all()
-            if ("page" in data && "per_page" in data) {
-                const page = request.input('page', 1);
-                const perPage = request.input("per_page", 20);
-                return await Direccion.query().paginate(page, perPage) //devuelvame una fraccion de todos los teatros
-            } else {
-                return await Direccion.query() //DEVUELVE TODOS LOS TEATROS SI NO SE ESPECIFICA EL ID
-            }
+export default class DireccionesController {
+  // Método de búsqueda
+  public async find({ request, params }: HttpContextContract) {
+    let theDireccion;
 
-        }
-
-    }
-    public async create({ request }: HttpContextContract) { 
-        const body = request.body();
-        const theDireccion: Direccion = await Direccion.create(body);
+    try {
+      if (params.id) {
+        theDireccion = await Direccion.findOrFail(params.id);
+        await theDireccion.load("municipio");
+        await theDireccion.load('centrosDistribucion');
         return theDireccion;
+      } else {
+        const data = request.all();
+        if ("page" in data && "per_page" in data) {
+          const page = request.input('page', 1);
+          const perPage = request.input("per_page", 20);
+          return await Direccion.query().paginate(page, perPage);
+        } else {
+          return await Direccion.query();
+        }
+      }
+    } catch (error) {
+      throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
+    }
+  }
+
+  // Método para crear una dirección
+  public async create({ request, response }: HttpContextContract) {
+    try {
+      // Validar los datos usando el DireccionValidator
+      const payload = await request.validate(DireccionValidator);
+
+      // Crear la dirección si la validación es exitosa
+      const theDireccion = await Direccion.create(payload);
+      return theDireccion;
+
+    } catch (error) {
+      // Si el error es de validación, devolver los mensajes de error de forma legible
+      if (error.messages) {
+        return response.badRequest({ errors: error.messages.errors });
+      }
+      // Para cualquier otro tipo de error, lanzar una excepción genérica
+      throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
+    }
+  }
+
+  // Método para actualizar una dirección
+  public async update({ params, request, response }: HttpContextContract) {
+    let payload;
+
+    try {
+      // Validar los datos con DireccionValidator
+      payload = await request.validate(DireccionValidator);
+    } catch (error) {
+      // Si el error es de validación, devolver los mensajes de error de forma legible
+      if (error.messages) {
+        return response.badRequest({ errors: error.messages.errors });
+      }
+      // Si es otro tipo de error, lanzar una excepción genérica
+      throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
-    public async update({ params, request }: HttpContextContract) {
-        const theDireccion: Direccion = await Direccion.findOrFail(params.id);
-        const body = request.body();
-        theDireccion.localidad = body.localidad;
-        theDireccion.tipoDireccion = body.tipoDireccion;
-        theDireccion.calle = body.calle;
-        theDireccion.numeroDireccion = body.numeroDireccion;
-        theDireccion.referencias = body.referencias;
-        theDireccion.municipio_id = body.municipio_id;
-        return await theDireccion.save();
-    }
+    // Obtener la dirección y actualizar los datos
+    const theDireccion = await Direccion.findOrFail(params.id);
+    theDireccion.localidad = payload.localidad;
+    theDireccion.tipoDireccion = payload.tipoDireccion;
+    theDireccion.calle = payload.calle;
+    theDireccion.numeroDireccion = payload.numeroDireccion;
+    theDireccion.referencias = payload.referencias;
+    theDireccion.municipio_id = payload.municipio_id;
+    return await theDireccion.save();
+  }
 
-    public async delete({ params, response }: HttpContextContract) {
-        const theDireccion: Direccion = await Direccion.findOrFail(params.id);
-            response.status(204);
-            return await theDireccion.delete();
-    }
+  // Método para eliminar una dirección
+  public async delete({ params, response }: HttpContextContract) {
+    const theDireccion = await Direccion.findOrFail(params.id);
+    response.status(204);
+    return await theDireccion.delete();
+  }
 }
-

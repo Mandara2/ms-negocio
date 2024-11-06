@@ -8,9 +8,9 @@ export default class CentroDistribucionValidator {
     nombre:schema.string([rules.alphaNum({
       allow: ['space']
     }), rules.required()]),
-    capacidad_almacenamiento: schema.number([rules.unsigned(),rules.regex(/^[0-9]+$/),]),
+    capacidad_almacenamiento: schema.number([rules.unsigned()]),
     direccion_id: schema.number([
-      rules.exists({ table: 'direccion', column: 'id' }), rules.required() 
+      rules.exists({ table: 'direcciones', column: 'id' }), rules.required() 
     ])
   })
 
@@ -20,8 +20,8 @@ export default class CentroDistribucionValidator {
     'nombre.alphaNum': 'El campo nombre solo acepta como caracter especial es espacio',
     'nombre.required': 'El campo nombre es obligatorio',
     'capacidad_almacenamiento.unsigned': 'La capacidad de almacenamiento no puede ser negativa' ,
-    'capacidad_almacenamiento.required': 'El campo capacidadAlmacenamiento es obligatorio',
-    'capacidad_almacenamiento.regex': 'El campo capacidadAlmacenamiento solo acepta numeros',
+    'capacidad_almacenamiento.required': 'El campo capacidad_almacenamiento es obligatorio',
+    'capacidad_almacenamiento.regex': 'El campo capacidad_almacenamiento solo acepta numeros',
     'direccion_id.exists':'La direccion debe existir en la base de datos',
     'direccion_id.required': 'El campo direccion_id es obligatorio'
   }

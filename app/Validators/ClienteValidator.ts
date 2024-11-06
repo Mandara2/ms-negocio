@@ -11,13 +11,13 @@ export default class ClienteValidator {
     ]),
     cantidad_pedidos_realizados: schema.number([  //Realmente se debe poner este atributo?????
       rules.unsigned()
-    ])
+    ]),
   })
 
  
   public messages: CustomMessages = {
     'telefono.required': 'El campo telefono es obligatorio',
     'telefono.regex': 'El campo telefono solo puede contener numeros y guiones',
-    'cantidad_pedidos_realizados.unsigned': 'El campo cantidadPedidosRealizados no puede ser negativo' 
+    'cantidad_pedidos_realizados.unsigned': 'El campo cantidadPedidosRealizados no puede ser negativo'
   }
 }

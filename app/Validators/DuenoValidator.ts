@@ -10,13 +10,13 @@ export default class DuenoValidator {
       rules.required(),
       rules.regex(/^[0-9-]+$/) // Solo permite números y guiones
     ]),
-      fechaNacimiento: schema.date({
+      fecha_nacimiento: schema.date({
         format: 'yyyy-MM-dd'
       }, [
         rules.required() // Hace que el campo sea obligatorio
       ]),
     conductor_id: schema.number([
-      rules.exists({ table: 'conductor', column: 'id' })
+      rules.exists({ table: 'conductors', column: 'id' })
     ])
   })
 

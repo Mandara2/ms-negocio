@@ -5,10 +5,8 @@ export default class EmpresaValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    telefono: schema.string([
-      rules.required(),
-      rules.regex(/^[0-9-]+$/) // Solo permite números y guiones
-    ]),
+
+    nit:schema.string([rules.required()]),
     tipo_empresa:schema.string([rules.alphaNum({
       allow: ['space', 'underscore', 'dash']
     }), rules.required()]),
@@ -17,11 +15,11 @@ export default class EmpresaValidator {
       allow: ['space', 'underscore', 'dash']
     })]),
     cliente_id: schema.number([
-      rules.exists({ table: 'cliente', column: 'id' })
+      rules.exists({ table: 'clientes', column: 'id' })
     ]),
 
     persona_natural_id: schema.number([
-      rules.exists({ table: 'personaNatural', column: 'id' }) 
+      rules.exists({ table: 'persona_naturals', column: 'id' }) 
     ])
   })
 
