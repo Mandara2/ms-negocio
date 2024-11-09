@@ -67,7 +67,7 @@ export default class CentroDistribucionsController {
     // Obtener el centro de distribución y actualizar los datos
     const theCentroDistribucion = await CentroDistribucion.findOrFail(params.id);
     theCentroDistribucion.nombre = payload.nombre;
-    theCentroDistribucion.capacidadAlmacenamiento = payload.capacidadAlmacenamiento;
+    theCentroDistribucion.capacidad_almacenamiento = payload.capacidadAlmacenamiento;
     theCentroDistribucion.direccion_id = payload.direccion_id;
     return await theCentroDistribucion.save();
   }
