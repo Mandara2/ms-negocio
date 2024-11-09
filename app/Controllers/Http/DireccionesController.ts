@@ -68,9 +68,9 @@ export default class DireccionesController {
     // Obtener la dirección y actualizar los datos
     const theDireccion = await Direccion.findOrFail(params.id);
     theDireccion.localidad = payload.localidad;
-    theDireccion.tipoDireccion = payload.tipoDireccion;
+    theDireccion.tipo_direccion = payload.tipo_direccion;
     theDireccion.calle = payload.calle;
-    theDireccion.numeroDireccion = payload.numeroDireccion;
+    theDireccion.numero_direccion = payload.numero_direccion;
     theDireccion.referencias = payload.referencias;
     theDireccion.municipio_id = payload.municipio_id;
     return await theDireccion.save();

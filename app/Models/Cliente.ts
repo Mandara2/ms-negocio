@@ -14,7 +14,7 @@ export default class Cliente extends BaseModel {
   public telefono: string
 
   @column()
-  public cantidadPedidosRealizados: number
+  public cantidad_pedidos_realizados: number
 
 /*   @hasOne(() => Empresa, {
     foreignKey: 'cliente_id'

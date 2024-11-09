@@ -10,11 +10,9 @@ export default class PersonaNaturalValidator {
       rules.regex(/^[0-9]+$/), // Solo permite dígitos del 0 al 9
       rules.required()
     ]),
-    tipo_documento: schema.enum(
-      ['Cedula', 'Pasaporte', 'Cedula Extranjera'] as const, [
-        rules.required()
-      ] // Limita las opciones a estas tres
-    ),
+    tipo_documento: schema.string([
+      rules.required()
+    ]),
     fecha_nacimiento: schema.date({
       format: 'yyyy-MM-dd'
     }, [

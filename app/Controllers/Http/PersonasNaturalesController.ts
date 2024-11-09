@@ -21,12 +21,10 @@ export default class PersonasNaturalesController {
           headers: { Authorization: request.headers().authorization || '' }
         });
 
-        // Verificar si se encontró usuario
         if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
           throw new Exception('No se encontró información de usuario en el microservicio', 404);
         }
 
-        // Devolver los datos combinados
         return { cliente: thePersonaNatural, usuario: userResponse.data };
       } else {
         const data = request.all();
@@ -39,7 +37,6 @@ export default class PersonasNaturalesController {
         }
       }
     } catch (error) {
-      // Manejo de errores
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
   }
@@ -56,16 +53,21 @@ export default class PersonasNaturalesController {
         headers: { Authorization: request.headers().authorization || '' }
       });
 
-      // Verificar si se encontró usuario
       if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
         throw new Error('No se encontró información de usuario, verifique que el código sea correcto');
       }
 
+      // Convertir fecha_nacimiento a Date
+      const fechaNacimientoDate = payload.fecha_nacimiento.toJSDate();
+
       // Crear la persona natural
-      const thePersonaNatural = await PersonaNatural.create(payload);
+      const thePersonaNatural = await PersonaNatural.create({
+        ...payload,
+        fecha_nacimiento: fechaNacimientoDate
+      });
+      
       return thePersonaNatural;
     } catch (error) {
-      // Manejo de errores de validación o de usuario
       if (error.messages) {
         return response.badRequest({ errors: error.messages.errors });
       }
@@ -88,22 +90,24 @@ export default class PersonasNaturalesController {
         headers: { Authorization: request.headers().authorization || '' }
       });
 
-      // Verificar si se encontró usuario
       if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
         throw new Error('No se encontró información de usuario, verifique que el código sea correcto');
       }
 
-      // Actualizar los datos
-      thePersonaNatural.usuario_id = body.usuario_id;
-      thePersonaNatural.identificacion = payload.identificacion;
-      thePersonaNatural.tipoDocumento = payload.tipo_documento;
-      //thePersonaNatural.fechaNacimiento = payload.fecha_nacimiento;
-      thePersonaNatural.cliente_id = body.cliente_id;
+      // Convertir fecha_nacimiento a Date
+      const fechaNacimientoDate = payload.fecha_nacimiento.toJSDate();
 
-      // Guardar los cambios
+      // Actualizar los datos
+      thePersonaNatural.merge({
+        usuario_id: body.usuario_id,
+        identificacion: payload.identificacion,
+        tipo_documento: payload.tipo_documento,
+        fecha_nacimiento: fechaNacimientoDate,
+        cliente_id: body.cliente_id,
+      });
+
       return await thePersonaNatural.save();
     } catch (error) {
-      // Manejo de errores de validación o de usuario
       if (error.messages) {
         return response.badRequest({ errors: error.messages.errors });
       }
@@ -118,7 +122,6 @@ export default class PersonasNaturalesController {
       response.status(204);
       return await thePersonaNatural.delete();
     } catch (error) {
-      // Manejo de errores al intentar eliminar
       throw new Exception(error.message || 'Error al intentar eliminar la persona natural', 500);
     }
   }

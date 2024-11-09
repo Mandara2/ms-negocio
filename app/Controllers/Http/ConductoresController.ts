@@ -47,6 +47,7 @@ export default class ConductoresController {
     try {
       // Validar los datos utilizando el ConductorValidator
       const body = request.body();
+      const payload = await request.validate(ConductorValidator);
 
       // Llamada al microservicio de usuarios para verificar el ID del usuario
       const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${body.usuario_id}`, {
@@ -58,12 +59,17 @@ export default class ConductoresController {
         throw new Exception('No se encontró información de usuario, verifique que el código sea correcto', 404);
       }
 
-      // Crear el conductor si la validación es exitosa
-
-      console.log(body);
+  
+      // Convertir fecha_nacimiento a Date
+      const fecha_nacimiento_date = payload.fecha_nacimiento.toJSDate();
+      const fecha_vencimiento_licencia = payload.fecha_vencimiento_licencia.toJSDate();
       
+      const theConductor = await Conductores.create({
+        ...payload,
+        fecha_nacimiento: fecha_nacimiento_date,
+        fecha_vencimiento_licencia: fecha_vencimiento_licencia
+      });
       
-      const theConductor = await Conductores.create(body);
       return theConductor;
 
     } catch (error) {
@@ -83,9 +89,12 @@ export default class ConductoresController {
     try {
       // Validar los datos utilizando el ConductorValidator
       payload = await request.validate(ConductorValidator);
+      const body = request.body();
+
+      const theConductor = await Conductores.findOrFail(params.id);
 
       // Llamada al microservicio de usuarios para verificar el ID del usuario
-      const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${payload.usuario_id}`, {
+      const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${body.usuario_id}`, {
         headers: { Authorization: request.headers().authorization || '' }
       });
 
@@ -94,13 +103,16 @@ export default class ConductoresController {
         throw new Exception('No se encontró información de usuario, verifique que el código sea correcto', 404);
       }
 
+      const fechaNacimientoDate = payload.fecha_nacimiento.toJSDate();
       // Obtener el conductor y actualizar los datos
-      const theConductor = await Conductores.findOrFail(params.id);
-      theConductor.usuario_id = payload.usuario_id;
-      theConductor.telefono = payload.telefono;
-      theConductor.fechaNacimiento = payload.fechaNacimiento;
-      theConductor.numeroLicencia = payload.numeroLicencia;
-      theConductor.fechaVencimientoLicencia = payload.fechaVencimientoLicencia;
+      theConductor.merge({
+        usuario_id: body.usuario_id,
+        fecha_nacimiento: fechaNacimientoDate,
+        telefono: body.telefono,
+        numero_licencia: body.numero_licencia,
+        fecha_vencimiento_licencia: body.fecha_vencimiento_licencia
+      });
+
       return await theConductor.save();
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible

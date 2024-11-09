@@ -10,7 +10,7 @@ export default class CentroDistribucion extends BaseModel {
   public nombre: string
 
   @column()
-  public capacidadAlmacenamiento: number
+  public capacidad_almacenamiento: number
 
   @column()
   public direccion_id: number

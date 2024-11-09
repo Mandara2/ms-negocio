@@ -58,8 +58,8 @@ export default class EmpresasController {
       // Obtener la empresa y actualizar los datos
       const theEmpresa: Empresa = await Empresa.findOrFail(params.id);
       theEmpresa.nit = payload.nit;
-      theEmpresa.tipoEmpresa = payload.tipoEmpresa;
-      theEmpresa.direccionFiscal = payload.direccionFiscal;
+      theEmpresa.tipo_empresa = payload.tipo_empresa;
+      theEmpresa.direccion_fiscal = payload.direccion_fiscal;
       theEmpresa.cliente_id = payload.cliente_id;
       return await theEmpresa.save();
     } catch (error) {

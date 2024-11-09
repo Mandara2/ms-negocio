@@ -14,10 +14,10 @@ export default class PersonaNatural extends BaseModel {
   public identificacion: string
 
   @column()
-  public tipoDocumento: string
+  public tipo_documento: string
 
   @column()
-  public fechaNacimiento: Date
+  public fecha_nacimiento: Date
 
   @column()
   public cliente_id: number

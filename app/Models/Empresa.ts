@@ -11,16 +11,16 @@ export default class Empresa extends BaseModel {
   public nit: string
 
   @column()
-  public tipoEmpresa: string
+  public tipo_empresa: string
 
   @column()
-  public direccionFiscal: string
+  public direccion_fiscal: string
 
   @column()
   public cliente_id: number
 
   @column()
-  public personaNatural_id: number
+  public persona_natural_id: number
 
   @belongsTo(() => Cliente, {
     foreignKey: 'cliente_id'

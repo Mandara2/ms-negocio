@@ -11,13 +11,13 @@ export default class Direccione extends BaseModel {
   public localidad: string
 
   @column()
-  public tipoDireccion: string
+  public tipo_direccion: string
 
   @column()
   public calle: string
 
   @column()
-  public numeroDireccion: string
+  public numero_direccion: string
 
   @column()
   public referencias: string

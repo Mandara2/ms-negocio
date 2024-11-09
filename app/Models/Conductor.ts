@@ -13,13 +13,13 @@ export default class Conductor extends BaseModel {
   public telefono: string
 
   @column()
-  public numeroLicencia: string
+  public numero_licencia: string
 
   @column()
-  public fechaVencimientoLicencia: Date
+  public fecha_vencimiento_licencia: Date
 
   @column()
-  public fechaNacimiento: Date
+  public fecha_nacimiento: Date
 
   @hasOne(() => Dueno, {
     foreignKey: 'conductor_id'
