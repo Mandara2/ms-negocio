@@ -12,7 +12,8 @@ export default class VehiculoConductoresController {
     try {
       if (params.id) {
         theVehiculoConductor = await VehiculoConductor.findOrFail(params.id);
-        await theVehiculoConductor.load('municipios');
+        await theVehiculoConductor.load('vehiculos');
+        await theVehiculoConductor.load('conductores');
         return theVehiculoConductor;
       } else {
         const data = request.all();

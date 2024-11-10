@@ -12,7 +12,6 @@ export default class VehiculoController {
     try {
       if (params.id) {
         theVehiculo = await Vehiculo.findOrFail(params.id);
-        await theVehiculo.load('municipios');
         return theVehiculo;
       } else {
         const data = request.all();

@@ -12,7 +12,7 @@ export default class LotesController {
     try {
       if (params.id) {
         theLote = await Lote.findOrFail(params.id);
-        await theLote.load('municipios');
+        await theLote.load('dirListaOrden');
         return theLote;
       } else {
         const data = request.all();
