@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import Cliente from './Cliente';
 import Cuota from './Cuota';
+import Ruta from './Ruta';
 
 
 export default class Contrato extends BaseModel {
@@ -34,4 +35,9 @@ export default class Contrato extends BaseModel {
     foreignKey:'contrato_id'
   })
   public cuotas:HasMany<typeof Cuota>
+
+  @hasMany(() => Ruta,{
+    foreignKey:'contrato_id'
+  })
+  public rutas:HasMany<typeof Ruta>
 }

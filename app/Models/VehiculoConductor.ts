@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, BelongsTo, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
 import Vehiculo from './Vehiculo'
 import Conductor from './Conductor';
+import Ruta from './Ruta';
 
 export default class VehiculoConductor extends BaseModel {
   @column({ isPrimary: true })
@@ -35,4 +36,9 @@ export default class VehiculoConductor extends BaseModel {
     foreignKey: 'conductor_id'
   })
   public conductor: BelongsTo<typeof Conductor>
+
+  @hasMany(() => Ruta,{
+    foreignKey:'vehiculo_conductor_id'
+  })
+  public rutas:HasMany<typeof Ruta>
 }
