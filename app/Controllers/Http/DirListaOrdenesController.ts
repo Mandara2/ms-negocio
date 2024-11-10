@@ -3,7 +3,7 @@ import DirListaOrden from 'App/Models/DirListaOrden';
 import { Exception } from '@adonisjs/core/build/standalone';
 import DirListaOrdenValidator from 'App/Validators/DirListaOrdenValidator'; // Importar el validador
 
-export default class DirListaOrdensController {
+export default class DirListaOrdenesController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
     let theDirListaOrden;

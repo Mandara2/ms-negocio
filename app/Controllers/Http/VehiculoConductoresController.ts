@@ -3,7 +3,7 @@ import VehiculoConductor from 'App/Models/VehiculoConductor';
 import { Exception } from '@adonisjs/core/build/standalone';
 import VehiculoConductorValidator from 'App/Validators/VehiculoConductorValidator'; // Importar el validador
 
-export default class VehiculoConductorController {
+export default class VehiculoConductoresController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
     let theVehiculoConductor;

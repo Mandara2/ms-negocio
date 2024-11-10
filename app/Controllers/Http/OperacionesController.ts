@@ -3,7 +3,7 @@ import Operacion from 'App/Models/Operacion';
 import { Exception } from '@adonisjs/core/build/standalone';
 import OperacionValidator from 'App/Validators/OperacionValidator'; // Importar el validador
 
-export default class OperacionController {
+export default class OperacionesController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
     let theOperacion;
