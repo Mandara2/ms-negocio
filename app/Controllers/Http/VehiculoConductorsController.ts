@@ -1,28 +1,27 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Municipio from 'App/Models/Municipio';
+import VehiculoConductor from 'App/Models/VehiculoConductor';
 import { Exception } from '@adonisjs/core/build/standalone';
-import MunicipioValidator from 'App/Validators/MunicipioValidator'; // Importar el validador
+import VehiculoConductorValidator from 'App/Validators/VehiculoConductorValidator'; // Importar el validador
 
-export default class MunicipiosController {
+export default class VehiculoConductorController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theMunicipio;
+    let theVehiculoConductor;
+    
 
     try {
       if (params.id) {
-        theMunicipio = await Municipio.findOrFail(params.id);
-        await theMunicipio.load("departamento");
-        await theMunicipio.load('direcciones');
-        await theMunicipio.load('Operaciones')
-        return theMunicipio;
+        theVehiculoConductor = await VehiculoConductor.findOrFail(params.id);
+        await theVehiculoConductor.load('municipios');
+        return theVehiculoConductor;
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Municipio.query().paginate(page, perPage);
+          return await VehiculoConductor.query().paginate(page, perPage);
         } else {
-          return await Municipio.query();
+          return await VehiculoConductor.query();
         }
       }
     } catch (error) {
@@ -30,16 +29,16 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para crear un municipio
+  // Método para crear un VehiculoConductor
   public async create({ request, response }: HttpContextContract) {
     try {
-      // Validar datos usando el MunicipioValidator
-      const payload = await request.validate(MunicipioValidator);
+      // Validar datos usando el VehiculoConductorValidator
+      const payload = await request.validate(VehiculoConductorValidator);
 
-      // Crear el municipio si la validación es exitosa
-      const theMunicipio = await Municipio.create(payload);
-      return theMunicipio;
-
+      // Crear el VehiculoConductor si la validación es exitosa
+      const theVehiculoConductor = await VehiculoConductor.create(payload);
+      return theVehiculoConductor;
+      
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -50,13 +49,13 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para actualizar un municipio
+  // Método para actualizar un VehiculoConductor
   public async update({ params, request, response }: HttpContextContract) {
     let payload;
 
     try {
-      // Validar los datos con MunicipioValidator
-      payload = await request.validate(MunicipioValidator);
+      // Validar los datos con VehiculoConductorValidator
+      payload = await request.validate(VehiculoConductorValidator);
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -66,18 +65,19 @@ export default class MunicipiosController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
-    // Obtener el municipio y actualizar los datos
-    const theMunicipio = await Municipio.findOrFail(params.id);
-    theMunicipio.nombre = payload.nombre;
-    theMunicipio.codigoPostal = payload.codigoPostal;
-    theMunicipio.departamento_id = payload.departamento_id;
-    return await theMunicipio.save();
+    // Obtener el VehiculoConductor y actualizar los datos
+    const theVehiculoConductor = await VehiculoConductor.findOrFail(params.id);
+    theVehiculoConductor.fecha_inicio= payload.fecha_inicio;
+    theVehiculoConductor.fecha_fin= payload.fecha_fin;
+    theVehiculoConductor.conductor_id= payload.conductor_id;
+    theVehiculoConductor.vehiculo_id= payload.vehiculo_id;
+    return await theVehiculoConductor.save();
   }
 
-  // Método para eliminar un municipio
+  // Método para eliminar un VehiculoConductor
   public async delete({ params, response }: HttpContextContract) {
-    const theMunicipio = await Municipio.findOrFail(params.id);
+    const theVehiculoConductor = await VehiculoConductor.findOrFail(params.id);
     response.status(204);
-    return await theMunicipio.delete();
+    return await theVehiculoConductor.delete();
   }
 }

@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, hasMany, HasMany, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import Dueno from './Dueno'
+import VehiculoConductor from './VehiculoConductor'
 
 export default class Conductor extends BaseModel {
   @column({ isPrimary: true })
@@ -31,4 +32,9 @@ export default class Conductor extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @hasMany(() => VehiculoConductor, {
+    foreignKey: 'conductor_id'
+  })
+  public VehiculosConductores: HasMany<typeof VehiculoConductor>
 }

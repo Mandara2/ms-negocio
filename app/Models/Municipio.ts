@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import Departamento from './Departamento'
 import Direccion from './Direccion'
+import Operacion from './Operacion'
 
 
 export default class Municipio extends BaseModel {
@@ -32,4 +33,9 @@ export default class Municipio extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @hasMany(() => Operacion, {
+    foreignKey: 'municipio_id'
+  })
+  public operaciones: HasMany<typeof Operacion>
 }
