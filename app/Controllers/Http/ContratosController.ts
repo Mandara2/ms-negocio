@@ -7,12 +7,11 @@ export default class ContratosController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
     let theContrato;
-    await theContrato.load("cuotas")
 
     try {
       if (params.id) {
         theContrato = await Contrato.findOrFail(params.id);
-        await theContrato.load('municipios');
+        await theContrato.load('cliente');
         return theContrato;
       } else {
         const data = request.all();
