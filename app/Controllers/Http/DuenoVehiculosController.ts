@@ -12,7 +12,8 @@ export default class DuenoVehiculoController {
     try {
       if (params.id) {
         theDuenoVehiculo = await DuenoVehiculo.findOrFail(params.id);
-        await theDuenoVehiculo.load('municipios');
+        await theDuenoVehiculo.load('duenos');
+        await theDuenoVehiculo.load('vehiculos');
         return theDuenoVehiculo;
       } else {
         const data = request.all();

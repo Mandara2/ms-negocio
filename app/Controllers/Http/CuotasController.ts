@@ -12,7 +12,7 @@ export default class CuotasController {
     try {
       if (params.id) {
         theCuota = await Cuota.findOrFail(params.id);
-        await theCuota.load('municipios');
+        await theCuota.load('contrato');
         return theCuota;
       } else {
         const data = request.all();

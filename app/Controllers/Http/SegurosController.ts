@@ -12,7 +12,7 @@ export default class SegurosController {
     try {
       if (params.id) {
         theSeguro = await Seguro.findOrFail(params.id);
-        await theSeguro.load('municipios');
+        await theSeguro.load('vehiculos');
         return theSeguro;
       } else {
         const data = request.all();
