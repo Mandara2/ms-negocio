@@ -9,16 +9,16 @@ export default class Contrato extends BaseModel {
   @column({ isPrimary: true })
   public id: number
   @column()
-  public fecha:Date
+  public fecha: Date
 
   @column()
-  public distancia_total:number
+  public distancia_total: number
 
   @column()
-  public costo_total:number
+  public costo_total: number
 
   @column()
-  public cliente_id:number
+  public cliente_id: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

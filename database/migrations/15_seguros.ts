@@ -7,14 +7,10 @@ export default class extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.date('fecha_inicio')
-      table.date('fecha_fin')
-      table.string('compania_aseguradora')
-      table.integer('vehiculo_id').unsigned().references('vehiculos.id')
-
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
+      table.date('fecha_inicio').notNullable()
+      table.date('fecha_fin').notNullable()
+      table.string('compania_aseguradora').notNullable()
+      table.integer('vehiculo_id').unsigned().references('vehiculos.id').notNullable()
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })
