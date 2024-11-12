@@ -18,7 +18,7 @@ export default class OperacionValidator {
       rules.exists({ table: 'vehiculos', column: 'id' }), rules.required() 
     ]),
     municipio_id: schema.number([
-      rules.exists({ table: 'municipio', column: 'id' }), rules.required() 
+      rules.exists({ table: 'municipios', column: 'id' }), rules.required() 
     ])
   })
 

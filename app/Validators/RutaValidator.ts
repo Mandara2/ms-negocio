@@ -6,12 +6,14 @@ export default class RutaValidator {
 
   
   public schema = schema.create({
-    punto_inicio:schema.string([rules.alphaNum({
-      allow: ['space', 'underscore', 'dash']
-    }), rules.required()]),
-    punto_destino:schema.string([rules.alphaNum({
-      allow: ['space', 'underscore', 'dash']
-    }), rules.required()]),
+    punto_inicio: schema.string([
+      rules.regex(/^[a-zA-Z0-9 _\-#]+$/), // Permite letras, números, espacios, guiones bajos, guiones y '#'
+      rules.required()
+    ]),
+    punto_destino: schema.string([
+      rules.regex(/^[a-zA-Z0-9 _\-#]+$/), // Permite letras, números, espacios, guiones bajos, guiones y '#'
+      rules.required()
+    ]),
     distancia: schema.number([rules.unsigned(), rules.required()]),
     fecha_entrega: schema.date({
       format: 'yyyy-MM-dd'

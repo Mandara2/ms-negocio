@@ -7,7 +7,7 @@ export default class CuotaValidator {
   
   public schema = schema.create({
     monto: schema.number([rules.unsigned(), rules.required()]),
-    interes: schema.number([rules.unsigned(), rules.required()]),
+    intereses: schema.number([rules.unsigned(), rules.required()]),
     numero: schema.number([rules.unsigned(), rules.required()]),
     contrato_id: schema.number([
       rules.exists({ table: 'contratos', column: 'id' }), rules.required() 

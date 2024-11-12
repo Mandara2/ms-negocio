@@ -16,7 +16,7 @@ export default class SeguroValidator {
     }, [
       rules.required() // Hace que el campo sea obligatorio
     ]),
-    comapania_aseguradora:schema.string([rules.alphaNum({
+    compania_aseguradora:schema.string([rules.alphaNum({
       allow: ['space']
     })]),
     vehiculo_id: schema.number([

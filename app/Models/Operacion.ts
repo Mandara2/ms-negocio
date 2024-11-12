@@ -4,6 +4,9 @@ import Vehiculo from './Vehiculo'
 import Municipio from './Municipio'
 
 export default class Operacion extends BaseModel {
+
+  public static table = 'operaciones';
+
   @column({ isPrimary: true })
   public id: number
 

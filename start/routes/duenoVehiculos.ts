@@ -4,5 +4,5 @@ Route.group(() => {
     Route.get("/duenoVehiculos/:id", "DuenoVehiculosController.find"); 
     Route.post("/duenoVehiculos", "DuenoVehiculosController.create");
     Route.put("/duenoVehiculos/:id", "DuenoVehiculosController.update");
-    Route.delete("/DuenoVehiculos/:id", "DuenoVehiculosController.delete");
+    Route.delete("/duenoVehiculos/:id", "DuenoVehiculosController.delete");
 }).middleware(['security'])

@@ -12,7 +12,7 @@ export default class TurnosController {
     try {
       if (params.id) {
         theTurno = await Turno.findOrFail(params.id);
-        await theTurno.load('conductores');
+        await theTurno.load('conductor');
         return theTurno;
       } else {
         const data = request.all();

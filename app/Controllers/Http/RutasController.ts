@@ -13,7 +13,7 @@ export default class RutasController {
       if (params.id) {
         theRuta = await Ruta.findOrFail(params.id);
         await theRuta.load('contrato');
-        await theRuta.load('vehiculos');
+        await theRuta.load('vehiculoConductor');
         return theRuta;
       } else {
         const data = request.all();

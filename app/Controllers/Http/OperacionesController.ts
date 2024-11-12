@@ -13,7 +13,7 @@ export default class OperacionesController {
       if (params.id) {
         theOperacion = await Operacion.findOrFail(params.id);
         await theOperacion.load('municipios');
-        await theOperacion.load('vehiculos');
+        await theOperacion.load('vehiculo');
         return theOperacion;
       } else {
         const data = request.all();
