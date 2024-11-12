@@ -4,12 +4,12 @@ import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 export default class extends BaseSeeder {
   public async run () {
     // Write your database queries inside the run method
-    await Database.table('contratos').insert([
+    await Database.table('cuotas').insert([
       {
         monto: '120000',
         intereses: '2000',
         numero: '3',
-        contrato_id:1
+        contrato_id: 1
       },
       {
         monto: '150000',

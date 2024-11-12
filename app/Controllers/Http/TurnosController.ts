@@ -34,8 +34,6 @@ export default class TurnosController {
     try {
       // Validar datos usando el TurnoValidator
       const payload = await request.validate(TurnoValidator);
-
-      // Crear el Turno si la validación es exitosa
       const theTurno = await Turno.create(payload);
       return theTurno;
       

@@ -4,7 +4,7 @@ import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 export default class extends BaseSeeder {
   public async run () {
     // Write your database queries inside the run method
-    await Database.table('contratos').insert([
+    await Database.table('vehiculos_conductores').insert([
       {
         fecha_inicio:new Date('2020-11-09'),
         fecha_fin: new Date('2018-09-20'),

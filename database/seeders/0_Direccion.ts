@@ -1,10 +1,10 @@
+import Database from '@ioc:Adonis/Lucid/Database'
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
-import Direccion from 'App/Models/Direccion'
 
 export default class DireccionSeeder extends BaseSeeder {
   public async run () {
     // Creamos las direcciones y asignamos el `municipio_id` correspondiente
-    await Direccion.createMany([
+    await Database.table('direcciones').insert([
       {
         localidad: 'El Poblado',
         tipo_direccion: 'Residencial',

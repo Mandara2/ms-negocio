@@ -36,8 +36,12 @@ export default class RutasController {
       // Validar datos usando el RutaValidator
       const payload = await request.validate(RutaValidator);
 
-      // Crear el Ruta si la validación es exitosa
-      const theRuta = await Ruta.create(payload);
+      const fecha_entrega = payload.fecha_entrega.toJSDate();
+      
+      const theRuta = await Ruta.create({
+        ...payload,
+        fecha_entrega: fecha_entrega
+      });
       return theRuta;
       
     } catch (error) {
@@ -66,11 +70,12 @@ export default class RutasController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
+    const fecha_entrega = payload.fecha_entrega.toJSDate();
     // Obtener el Ruta y actualizar los datos
     const theRuta = await Ruta.findOrFail(params.id);
     theRuta.punto_inicio= payload.punto_inicio;
     theRuta.punto_destino = payload.punto_destino;
-    theRuta.fecha_entrega= payload.fecha_entrega;
+    theRuta.fecha_entrega= fecha_entrega;
     theRuta.contrato_id= payload.contrato_id;
     theRuta.vehiculo_conductor_id= payload.vehiculo_conductor_id;
 

@@ -36,8 +36,15 @@ export default class OperacionesController {
       // Validar datos usando el OperacionValidator
       const payload = await request.validate(OperacionValidator);
 
-      // Crear el Operacion si la validación es exitosa
-      const theOperacion = await Operacion.create(payload);
+      // Convertir fecha_nacimiento a Date
+      const fecha_inicio = payload.fecha_inicio.toJSDate();
+      const fecha_fin = payload.fecha_fin.toJSDate();
+
+      const theOperacion = await Operacion.create({
+        ...payload,
+        fecha_inicio: fecha_inicio,
+        fecha_fin: fecha_fin
+      });
       return theOperacion;
       
     } catch (error) {
@@ -66,10 +73,12 @@ export default class OperacionesController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
+    const fecha_inicio = payload.fecha_inicio.toJSDate();
+      const fecha_fin = payload.fecha_fin.toJSDate();
     // Obtener el Operacion y actualizar los datos
     const theOperacion = await Operacion.findOrFail(params.id);
-    theOperacion.fecha_inicio= payload.fecha_inicio;
-    theOperacion.fecha_fin = payload.fecha_fin;
+    theOperacion.fecha_inicio= fecha_inicio;
+    theOperacion.fecha_fin = fecha_fin;
     theOperacion.municipio_id= payload.municipio_id;
     theOperacion.vehiculo_id= payload.vehiculo_id;
     return await theOperacion.save();

@@ -34,8 +34,15 @@ export default class ContratosController {
       // Validar datos usando el ContratoValidator
       const payload = await request.validate(ContratoValidator);
 
+      // Convertir fecha_nacimiento a Date
+      const fecha = payload.fecha.toJSDate();
+
+      const theContrato = await Contrato.create({
+        ...payload,
+        fecha: fecha
+      });
       // Crear el Contrato si la validación es exitosa
-      const theContrato = await Contrato.create(payload);
+      
       return theContrato;
       
     } catch (error) {
@@ -64,9 +71,10 @@ export default class ContratosController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
+    const fecha = payload.fecha.toJSDate();
     // Obtener el Contrato y actualizar los datos
     const theContrato = await Contrato.findOrFail(params.id);
-    theContrato.fecha = payload.fecha;
+    theContrato.fecha = fecha;
     theContrato.distancia_total = payload.distancia_total;
     theContrato.costo_total= payload.costo_total;
     theContrato.cliente_id= payload.cliente_id;

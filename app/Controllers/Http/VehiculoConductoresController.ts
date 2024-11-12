@@ -36,8 +36,15 @@ export default class VehiculoConductoresController {
       // Validar datos usando el VehiculoConductorValidator
       const payload = await request.validate(VehiculoConductorValidator);
 
-      // Crear el VehiculoConductor si la validación es exitosa
-      const theVehiculoConductor = await VehiculoConductor.create(payload);
+      // Convertir fecha_nacimiento a Date
+      const fecha_inicio = payload.fecha_inicio.toJSDate();
+      const fecha_fin = payload.fecha_fin.toJSDate();
+
+      const theVehiculoConductor = await VehiculoConductor.create({
+        ...payload,
+        fecha_inicio: fecha_inicio,
+        fecha_fin: fecha_fin
+      });
       return theVehiculoConductor;
       
     } catch (error) {
@@ -66,10 +73,13 @@ export default class VehiculoConductoresController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
+    const fecha_inicio = payload.fecha_inicio.toJSDate();
+      const fecha_fin = payload.fecha_fin.toJSDate();
+
     // Obtener el VehiculoConductor y actualizar los datos
     const theVehiculoConductor = await VehiculoConductor.findOrFail(params.id);
-    theVehiculoConductor.fecha_inicio= payload.fecha_inicio;
-    theVehiculoConductor.fecha_fin= payload.fecha_fin;
+    theVehiculoConductor.fecha_inicio= fecha_inicio;
+    theVehiculoConductor.fecha_fin= fecha_fin;
     theVehiculoConductor.conductor_id= payload.conductor_id;
     theVehiculoConductor.vehiculo_id= payload.vehiculo_id;
     return await theVehiculoConductor.save();

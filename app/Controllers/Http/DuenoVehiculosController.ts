@@ -36,8 +36,13 @@ export default class DuenoVehiculoController {
       // Validar datos usando el DuenoVehiculoValidator
       const payload = await request.validate(DuenoVehiculoValidator);
 
-      // Crear el DuenoVehiculo si la validación es exitosa
-      const theDuenoVehiculo = await DuenoVehiculo.create(payload);
+      // Convertir fecha_nacimiento a Date
+      const fecha_adquisicion = payload.fecha_adquisicion.toJSDate();
+
+      const theDuenoVehiculo = await DuenoVehiculo.create({
+        ...payload,
+        fecha_adquisicion: fecha_adquisicion
+      });
       return theDuenoVehiculo;
       
     } catch (error) {
@@ -66,9 +71,10 @@ export default class DuenoVehiculoController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
+    const fecha_adquisicion = payload.fecha_adquisicion.toJSDate();
     // Obtener el DuenoVehiculo y actualizar los datos
     const theDuenoVehiculo = await DuenoVehiculo.findOrFail(params.id);
-    theDuenoVehiculo.fecha_adquisicion= payload.fecha_adquisicion;
+    theDuenoVehiculo.fecha_adquisicion= fecha_adquisicion;
     theDuenoVehiculo.porcentaje_propiedad = payload.porcentaje_propiedad;
     theDuenoVehiculo.dueno_id= payload.dueno_id;
     theDuenoVehiculo.vehiculo_id= payload.vehiculo_id;

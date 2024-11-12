@@ -8,7 +8,7 @@ export default class extends BaseSeeder {
       {
         punto_inicio: 'cr2 #16-20',
         punto_destino: 'cr3 #20-13',
-        ditancia: 30,
+        distancia: 30,
         fecha_entrega: new Date('2024-09-12'),
         contrato_id:1,
         vehiculo_conductor_id:1
