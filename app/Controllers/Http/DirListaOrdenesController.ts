@@ -12,8 +12,8 @@ export default class DirListaOrdenesController {
     try {
       if (params.id) {
         theDirListaOrden = await DirListaOrden.findOrFail(params.id);
-        await theDirListaOrden.load('direcciones');
-        await theDirListaOrden.load('rutas');
+        await theDirListaOrden.load('direccion');
+        await theDirListaOrden.load('ruta');
         return theDirListaOrden;
       } else {
         const data = request.all();

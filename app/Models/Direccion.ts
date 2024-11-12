@@ -5,6 +5,9 @@ import Municipio from './Municipio'
 import DirListaOrden from './DirListaOrden'
 
 export default class Direccion extends BaseModel {
+
+  public static table = 'direcciones';
+
   @column({ isPrimary: true })
   public id: number
 

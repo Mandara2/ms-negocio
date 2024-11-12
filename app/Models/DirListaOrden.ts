@@ -5,6 +5,9 @@ import Direccion from './Direccion'
 import Lote from './Lote'
 
 export default class DirListaOrden extends BaseModel {
+
+  public static table = 'dir_lista_ordenes'
+
   @column({ isPrimary: true })
   public id: number
 

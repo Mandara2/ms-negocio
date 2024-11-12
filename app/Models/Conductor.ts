@@ -5,6 +5,9 @@ import VehiculoConductor from './VehiculoConductor'
 import Turno from './Turno'
 
 export default class Conductor extends BaseModel {
+  public static table = 'conductores'
+
+
   @column({ isPrimary: true })
   public id: number
 
