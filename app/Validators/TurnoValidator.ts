@@ -21,5 +21,12 @@ export default class TurnoValidator {
   })
 
   
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'fecha_inicio.date.format': 'El campo fecha inicio debe seguir el formato de yyyy-MM-dd HH:mm:ss', 
+    'fecha_inicio.required': 'El campo fecha inicio es obligatorio',
+    'fecha_fin.date.format': 'El campo fecha fin debe seguir el formato de yyyy-MM-dd HH:mm:ss', 
+    'fecha_fin.required': 'El campo fecha fin es obligatorio',
+    'conductor_id.exists': 'El conductor debe existir en la base de datos',
+    'conductor_id.required': 'El campo conductor id id es obligatorio'
+  }
 }

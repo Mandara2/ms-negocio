@@ -24,5 +24,13 @@ export default class SeguroValidator {
     ])
   })
 
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'fecha_inicio.date.format': 'El campo fecha inicio debe seguir el formato de yyyy-MM-dd', 
+    'fecha_inicio.required': 'El campo fecha inicio es obligatorio',
+    'fecha_fin.date.format': 'El campo fecha fin debe seguir el formato de yyyy-MM-dd', 
+    'fecha_fin.required': 'El campo fecha fin es obligatorio',
+    'compania_aseguradora': 'El campo compania aseguradora solo admite como caracter especial es espacio',
+    'vehiculo_id.exists': 'El vehiculo debe existir en la base de datos',
+      'vehiculo_id.required': 'El campo vehiculo id id es obligatorio',
+  }
 }

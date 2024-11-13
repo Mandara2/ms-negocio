@@ -3,6 +3,7 @@ import { BaseModel, belongsTo, BelongsTo, column, hasMany, HasMany } from '@ioc:
 import Contrato from './Contrato'
 import VehiculoConductor from './VehiculoConductor'
 import DirListaOrden from './DirListaOrden';
+//import Lote from './Lote';
 
 export default class Ruta extends BaseModel {
   @column({ isPrimary: true })
@@ -47,4 +48,9 @@ export default class Ruta extends BaseModel {
     foreignKey: 'ruta_id'
   })
   public dirListaOrden: HasMany<typeof DirListaOrden>
+
+  /* @hasMany(() => Lote, {
+    foreignKey: 'ruta_id'
+  })
+  public Lote: HasMany<typeof Lote> */
 }

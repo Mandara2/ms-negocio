@@ -69,6 +69,7 @@ export default class LotesController {
     const theLote = await Lote.findOrFail(params.id);
     theLote.peso= payload.peso;
     theLote.volumen = payload.volumen;
+  //theLote.ruta_id = payload.lote_id;
     theLote.dir_lista_orden_id= payload.dir_lista_orden;
 
     return await theLote.save();

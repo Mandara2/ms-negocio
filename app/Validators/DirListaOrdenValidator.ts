@@ -20,11 +20,11 @@ export default class DirListaOrdenValidator {
   public messages: CustomMessages = {
     'orden.required': 'El campo orden es obligatorio',
     'orden.unsigned': 'El campo orden no puede ser negativo',
-    'tdescripcion.alphaNum': 'El campo descripcion solo acepta como caracteres especiales el espacio, el guion bajo y medio',
-    'tdescripcion.required': 'El campo descripcion es obligatorio',
+    'descripcion.alphaNum': 'El campo descripcion solo acepta como caracteres especiales el espacio, el guion bajo y medio',
+    'descripcion.required': 'El campo descripcion es obligatorio',
     'ruta_id.required': 'El campo ruta es obligatorio',
-    'ruta_id.exist': 'La ruta debe existir en la base de datos ',
+    'ruta_id.exists': 'La ruta debe existir en la base de datos ',
     'direccion_id.required': 'El campo direccion es obligatorio',
-    'direccion_id.exist': 'La direccion debe existir en la base de datos'
+    'direccion_id.exists': 'La direccion debe existir en la base de datos'
   }
 }

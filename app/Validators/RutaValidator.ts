@@ -29,5 +29,18 @@ export default class RutaValidator {
   })
 
   
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'punto_inicio.regex': 'El campo punto inicio solo puede contener letras, numeros, espacios, guiones bajos o medios y numerales', 
+    'punto_inicio.required': 'El campo punto inicio es obligatorio', 
+    'punto_fin.regex': 'El campo punto fin solo puede contener letras, numeros, espacios, guiones bajos o medios y numerales', 
+    'punto_fin.required': 'El campo punto fin es obligatorio', 
+    'distancia.unsigned': 'El campo distancia no puede ser negativo',
+    'distancia.required': 'El campo distancia es obligatorio',
+     'fecha_entrega.date.format': 'El campo fecha entrega debe seguir el formato de yyyy-MM-dd', 
+    'fecha_entrega.required': 'El campo fecha entrega es obligatorio',
+     'contrato_id.exists': 'El contrato debe existir en la base de datos',
+      'contrato_id.required': 'El campo contrato id es obligatorio', 
+    'vehiculo_conductor_id.exists': 'El vehiculo conductor id debe existir en la base de datos',
+      'vehiculo_conductor_id.required': 'El camvehiculo conductor id id es obligatorio', 
+  }
 }

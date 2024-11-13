@@ -20,5 +20,14 @@ export default class DuenoVehiculoValidator {
     ])
   })
 
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'fecha_adquisicion.date.format': 'La fecha de adquisicion debe tener el formato yyyy-MM-dd',
+    'fecha_adquisicion.required': 'El campo fecha de adquisicion es obligatorio',
+    'porcentaje_propiedad.unsigned': 'El campo porcentaje de propiedad no puede ser negativo',
+    'porcentaje_propiedad.required': 'El campo porcentaje de propiedad es obligatorio',
+    'vehiculo_id.exists': 'El vehiculo debe existir en la base de datos',
+    'vehiculo_id.required': 'El campo vehiculo id es obligatorio',
+    'dueno_id.exists': 'El dueno debe existir en la base de datos',
+    'dueno_id.required': 'El campo dueno id es obligatorio'
+  }
 }

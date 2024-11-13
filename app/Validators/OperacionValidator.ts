@@ -23,5 +23,15 @@ export default class OperacionValidator {
   })
 
   
-  public messages: CustomMessages = {}
+  public messages: CustomMessages = {
+    'fecha_inicio.date.format': 'El campo fecha inicio debe tener el formato yyyy-MM-dd',
+    'fecha_inicio.required': 'El campo fecha inicio es obligatorio',
+    'fecha_fin.date.format': 'El campo fecha fin debe tener el formato yyyy-MM-dd',
+    'fecha_fin.required': 'El campo fecha fin es obligatorio',
+    'vehiculo_id.exists': 'El vehiculo debe de existir en la base de datos',
+    'vehiculo_id.required': 'El campo vehiculo id es obligatorio',
+    'municipio_id.exists': 'El municipio debe de existir en la base de datos',
+    'municipio_id.required': 'El campo municipio id es obligatorio'
+    
+  }
 }
