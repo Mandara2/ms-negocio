@@ -1,28 +1,27 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Municipio from 'App/Models/Municipio';
+import Lote from 'App/Models/Lote';
 import { Exception } from '@adonisjs/core/build/standalone';
-import MunicipioValidator from 'App/Validators/MunicipioValidator'; // Importar el validador
+import LoteValidator from 'App/Validators/LoteValidator'; // Importar el validador
 
-export default class MunicipiosController {
+export default class LotesController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theMunicipio;
+    let theLote;
+    
 
     try {
       if (params.id) {
-        theMunicipio = await Municipio.findOrFail(params.id);
-        await theMunicipio.load("departamento");
-        await theMunicipio.load('direcciones');
-        await theMunicipio.load('Operaciones')
-        return theMunicipio;
+        theLote = await Lote.findOrFail(params.id);
+        await theLote.load('dirListaOrden');
+        return theLote;
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Municipio.query().paginate(page, perPage);
+          return await Lote.query().paginate(page, perPage);
         } else {
-          return await Municipio.query();
+          return await Lote.query();
         }
       }
     } catch (error) {
@@ -30,16 +29,16 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para crear un municipio
+  // Método para crear un Lote
   public async create({ request, response }: HttpContextContract) {
     try {
-      // Validar datos usando el MunicipioValidator
-      const payload = await request.validate(MunicipioValidator);
+      // Validar datos usando el LoteValidator
+      const payload = await request.validate(LoteValidator);
 
-      // Crear el municipio si la validación es exitosa
-      const theMunicipio = await Municipio.create(payload);
-      return theMunicipio;
-
+      // Crear el Lote si la validación es exitosa
+      const theLote = await Lote.create(payload);
+      return theLote;
+      
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -50,13 +49,13 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para actualizar un municipio
+  // Método para actualizar un Lote
   public async update({ params, request, response }: HttpContextContract) {
     let payload;
 
     try {
-      // Validar los datos con MunicipioValidator
-      payload = await request.validate(MunicipioValidator);
+      // Validar los datos con LoteValidator
+      payload = await request.validate(LoteValidator);
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -66,18 +65,20 @@ export default class MunicipiosController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
-    // Obtener el municipio y actualizar los datos
-    const theMunicipio = await Municipio.findOrFail(params.id);
-    theMunicipio.nombre = payload.nombre;
-    theMunicipio.codigoPostal = payload.codigoPostal;
-    theMunicipio.departamento_id = payload.departamento_id;
-    return await theMunicipio.save();
+    // Obtener el Lote y actualizar los datos
+    const theLote = await Lote.findOrFail(params.id);
+    theLote.peso= payload.peso;
+    theLote.volumen = payload.volumen;
+  //theLote.ruta_id = payload.lote_id;
+    theLote.dir_lista_orden_id= payload.dir_lista_orden;
+
+    return await theLote.save();
   }
 
-  // Método para eliminar un municipio
+  // Método para eliminar un Lote
   public async delete({ params, response }: HttpContextContract) {
-    const theMunicipio = await Municipio.findOrFail(params.id);
+    const theLote = await Lote.findOrFail(params.id);
     response.status(204);
-    return await theMunicipio.delete();
+    return await theLote.delete();
   }
 }

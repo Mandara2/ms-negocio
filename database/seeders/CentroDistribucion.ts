@@ -10,27 +10,27 @@ export default class CentroDistribucionSeeder extends BaseSeeder {
       {
         nombre: 'Centro de Distribución Norte',
         capacidad_almacenamiento: 1000.5,
-        direccion_id: 2,
+        direccion_id: 1,
       },
       {
         nombre: 'Centro de Distribución Sur',
         capacidad_almacenamiento: 1500.0,
-        direccion_id: 3,
+        direccion_id: 2,
       },
       {
         nombre: 'Centro de Distribución Este',
         capacidad_almacenamiento: 800.75,
-        direccion_id: 4,
+        direccion_id: 3,
       },
       {
         nombre: 'Centro de Distribución Oeste',
         capacidad_almacenamiento: 1200.0,
-        direccion_id: 5,
+        direccion_id: 4,
       },
       {
         nombre: 'Centro de Distribución Central',
         capacidad_almacenamiento: 600.25,
-        direccion_id: 6,
+        direccion_id: 5,
       },
     ])
   }

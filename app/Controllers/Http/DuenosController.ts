@@ -12,6 +12,7 @@ export default class DuenosController { //se encarga de hacer las operaciones de
         try {
           if (params.id) {
             theDueno = await Dueno.findOrFail(params.id);
+            
     
             // Llamada al microservicio de usuarios
             const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${theDueno.usuario_id}`, {

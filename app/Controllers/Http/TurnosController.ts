@@ -1,28 +1,27 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Municipio from 'App/Models/Municipio';
+import Turno from 'App/Models/Turno';
 import { Exception } from '@adonisjs/core/build/standalone';
-import MunicipioValidator from 'App/Validators/MunicipioValidator'; // Importar el validador
+import TurnoValidator from 'App/Validators/TurnoValidator'; // Importar el validador
 
-export default class MunicipiosController {
+export default class TurnosController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theMunicipio;
+    let theTurno;
+    
 
     try {
       if (params.id) {
-        theMunicipio = await Municipio.findOrFail(params.id);
-        await theMunicipio.load("departamento");
-        await theMunicipio.load('direcciones');
-        await theMunicipio.load('Operaciones')
-        return theMunicipio;
+        theTurno = await Turno.findOrFail(params.id);
+        await theTurno.load('conductor');
+        return theTurno;
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Municipio.query().paginate(page, perPage);
+          return await Turno.query().paginate(page, perPage);
         } else {
-          return await Municipio.query();
+          return await Turno.query();
         }
       }
     } catch (error) {
@@ -30,16 +29,14 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para crear un municipio
+  // Método para crear un Turno
   public async create({ request, response }: HttpContextContract) {
     try {
-      // Validar datos usando el MunicipioValidator
-      const payload = await request.validate(MunicipioValidator);
-
-      // Crear el municipio si la validación es exitosa
-      const theMunicipio = await Municipio.create(payload);
-      return theMunicipio;
-
+      // Validar datos usando el TurnoValidator
+      const payload = await request.validate(TurnoValidator);
+      const theTurno = await Turno.create(payload);
+      return theTurno;
+      
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -50,13 +47,13 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para actualizar un municipio
+  // Método para actualizar un Turno
   public async update({ params, request, response }: HttpContextContract) {
     let payload;
 
     try {
-      // Validar los datos con MunicipioValidator
-      payload = await request.validate(MunicipioValidator);
+      // Validar los datos con TurnoValidator
+      payload = await request.validate(TurnoValidator);
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -66,18 +63,20 @@ export default class MunicipiosController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
-    // Obtener el municipio y actualizar los datos
-    const theMunicipio = await Municipio.findOrFail(params.id);
-    theMunicipio.nombre = payload.nombre;
-    theMunicipio.codigoPostal = payload.codigoPostal;
-    theMunicipio.departamento_id = payload.departamento_id;
-    return await theMunicipio.save();
+    // Obtener el Turno y actualizar los datos
+    const theTurno = await Turno.findOrFail(params.id);
+    theTurno.fecha_inicio= payload.fecha_inicio;
+    theTurno.fecha_fin = payload.fecha_fin;
+    theTurno.conductor_id= payload.conductor_id;
+    
+
+    return await theTurno.save();
   }
 
-  // Método para eliminar un municipio
+  // Método para eliminar un Turno
   public async delete({ params, response }: HttpContextContract) {
-    const theMunicipio = await Municipio.findOrFail(params.id);
+    const theTurno = await Turno.findOrFail(params.id);
     response.status(204);
-    return await theMunicipio.delete();
+    return await theTurno.delete();
   }
 }

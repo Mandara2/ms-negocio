@@ -1,28 +1,26 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Municipio from 'App/Models/Municipio';
+import Contrato from 'App/Models/Contrato';
 import { Exception } from '@adonisjs/core/build/standalone';
-import MunicipioValidator from 'App/Validators/MunicipioValidator'; // Importar el validador
+import ContratoValidator from 'App/Validators/ContratoValidator'; // Importar el validador
 
-export default class MunicipiosController {
+export default class ContratosController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theMunicipio;
+    let theContrato;
 
     try {
       if (params.id) {
-        theMunicipio = await Municipio.findOrFail(params.id);
-        await theMunicipio.load("departamento");
-        await theMunicipio.load('direcciones');
-        await theMunicipio.load('Operaciones')
-        return theMunicipio;
+        theContrato = await Contrato.findOrFail(params.id);
+        await theContrato.load('cliente');
+        return theContrato;
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Municipio.query().paginate(page, perPage);
+          return await Contrato.query().paginate(page, perPage);
         } else {
-          return await Municipio.query();
+          return await Contrato.query();
         }
       }
     } catch (error) {
@@ -30,16 +28,23 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para crear un municipio
+  // Método para crear un Contrato
   public async create({ request, response }: HttpContextContract) {
     try {
-      // Validar datos usando el MunicipioValidator
-      const payload = await request.validate(MunicipioValidator);
+      // Validar datos usando el ContratoValidator
+      const payload = await request.validate(ContratoValidator);
 
-      // Crear el municipio si la validación es exitosa
-      const theMunicipio = await Municipio.create(payload);
-      return theMunicipio;
+      // Convertir fecha_nacimiento a Date
+      const fecha = payload.fecha.toJSDate();
 
+      const theContrato = await Contrato.create({
+        ...payload,
+        fecha: fecha
+      });
+      // Crear el Contrato si la validación es exitosa
+      
+      return theContrato;
+      
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -50,13 +55,13 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para actualizar un municipio
+  // Método para actualizar un Contrato
   public async update({ params, request, response }: HttpContextContract) {
     let payload;
 
     try {
-      // Validar los datos con MunicipioValidator
-      payload = await request.validate(MunicipioValidator);
+      // Validar los datos con ContratoValidator
+      payload = await request.validate(ContratoValidator);
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -66,18 +71,20 @@ export default class MunicipiosController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
-    // Obtener el municipio y actualizar los datos
-    const theMunicipio = await Municipio.findOrFail(params.id);
-    theMunicipio.nombre = payload.nombre;
-    theMunicipio.codigoPostal = payload.codigoPostal;
-    theMunicipio.departamento_id = payload.departamento_id;
-    return await theMunicipio.save();
+    const fecha = payload.fecha.toJSDate();
+    // Obtener el Contrato y actualizar los datos
+    const theContrato = await Contrato.findOrFail(params.id);
+    theContrato.fecha = fecha;
+    theContrato.distancia_total = payload.distancia_total;
+    theContrato.costo_total= payload.costo_total;
+    theContrato.cliente_id= payload.cliente_id;
+    return await theContrato.save();
   }
 
-  // Método para eliminar un municipio
+  // Método para eliminar un Contrato
   public async delete({ params, response }: HttpContextContract) {
-    const theMunicipio = await Municipio.findOrFail(params.id);
+    const theContrato = await Contrato.findOrFail(params.id);
     response.status(204);
-    return await theMunicipio.delete();
+    return await theContrato.delete();
   }
 }

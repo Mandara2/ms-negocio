@@ -1,28 +1,26 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Municipio from 'App/Models/Municipio';
+import Vehiculo from 'App/Models/Vehiculo';
 import { Exception } from '@adonisjs/core/build/standalone';
-import MunicipioValidator from 'App/Validators/MunicipioValidator'; // Importar el validador
+import VehiculoValidator from 'App/Validators/VehiculoValidator'; // Importar el validador
 
-export default class MunicipiosController {
+export default class VehiculoController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theMunicipio;
+    let theVehiculo;
+    
 
     try {
       if (params.id) {
-        theMunicipio = await Municipio.findOrFail(params.id);
-        await theMunicipio.load("departamento");
-        await theMunicipio.load('direcciones');
-        await theMunicipio.load('Operaciones')
-        return theMunicipio;
+        theVehiculo = await Vehiculo.findOrFail(params.id);
+        return theVehiculo;
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Municipio.query().paginate(page, perPage);
+          return await Vehiculo.query().paginate(page, perPage);
         } else {
-          return await Municipio.query();
+          return await Vehiculo.query();
         }
       }
     } catch (error) {
@@ -30,16 +28,16 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para crear un municipio
+  // Método para crear un Vehiculo
   public async create({ request, response }: HttpContextContract) {
     try {
-      // Validar datos usando el MunicipioValidator
-      const payload = await request.validate(MunicipioValidator);
+      // Validar datos usando el VehiculoValidator
+      const payload = await request.validate(VehiculoValidator);
 
-      // Crear el municipio si la validación es exitosa
-      const theMunicipio = await Municipio.create(payload);
-      return theMunicipio;
-
+      // Crear el Vehiculo si la validación es exitosa
+      const theVehiculo = await Vehiculo.create(payload);
+      return theVehiculo;
+      
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -50,13 +48,13 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para actualizar un municipio
+  // Método para actualizar un Vehiculo
   public async update({ params, request, response }: HttpContextContract) {
     let payload;
 
     try {
-      // Validar los datos con MunicipioValidator
-      payload = await request.validate(MunicipioValidator);
+      // Validar los datos con VehiculoValidator
+      payload = await request.validate(VehiculoValidator);
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -66,18 +64,19 @@ export default class MunicipiosController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
-    // Obtener el municipio y actualizar los datos
-    const theMunicipio = await Municipio.findOrFail(params.id);
-    theMunicipio.nombre = payload.nombre;
-    theMunicipio.codigoPostal = payload.codigoPostal;
-    theMunicipio.departamento_id = payload.departamento_id;
-    return await theMunicipio.save();
+    // Obtener el Vehiculo y actualizar los datos
+    const theVehiculo = await Vehiculo.findOrFail(params.id);
+    theVehiculo.matricula= payload.matricula;
+    theVehiculo.modelo = payload.modelo;
+    theVehiculo.capacidad_carga= payload.capacidad_carga;
+    theVehiculo.tipo_carga= payload.tipo_carga;
+    return await theVehiculo.save();
   }
 
-  // Método para eliminar un municipio
+  // Método para eliminar un Vehiculo
   public async delete({ params, response }: HttpContextContract) {
-    const theMunicipio = await Municipio.findOrFail(params.id);
+    const theVehiculo = await Vehiculo.findOrFail(params.id);
     response.status(204);
-    return await theMunicipio.delete();
+    return await theVehiculo.delete();
   }
 }

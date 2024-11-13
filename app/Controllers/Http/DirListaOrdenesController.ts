@@ -1,28 +1,28 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Municipio from 'App/Models/Municipio';
+import DirListaOrden from 'App/Models/DirListaOrden';
 import { Exception } from '@adonisjs/core/build/standalone';
-import MunicipioValidator from 'App/Validators/MunicipioValidator'; // Importar el validador
+import DirListaOrdenValidator from 'App/Validators/DirListaOrdenValidator'; // Importar el validador
 
-export default class MunicipiosController {
+export default class DirListaOrdenesController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theMunicipio;
+    let theDirListaOrden;
+    
 
     try {
       if (params.id) {
-        theMunicipio = await Municipio.findOrFail(params.id);
-        await theMunicipio.load("departamento");
-        await theMunicipio.load('direcciones');
-        await theMunicipio.load('Operaciones')
-        return theMunicipio;
+        theDirListaOrden = await DirListaOrden.findOrFail(params.id);
+        await theDirListaOrden.load('direccion');
+        await theDirListaOrden.load('ruta');
+        return theDirListaOrden;
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Municipio.query().paginate(page, perPage);
+          return await DirListaOrden.query().paginate(page, perPage);
         } else {
-          return await Municipio.query();
+          return await DirListaOrden.query();
         }
       }
     } catch (error) {
@@ -30,16 +30,16 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para crear un municipio
+  // Método para crear un DirListaOrden
   public async create({ request, response }: HttpContextContract) {
     try {
-      // Validar datos usando el MunicipioValidator
-      const payload = await request.validate(MunicipioValidator);
+      // Validar datos usando el DirListaOrdenValidator
+      const payload = await request.validate(DirListaOrdenValidator);
 
-      // Crear el municipio si la validación es exitosa
-      const theMunicipio = await Municipio.create(payload);
-      return theMunicipio;
-
+      // Crear el DirListaOrden si la validación es exitosa
+      const theDirListaOrden = await DirListaOrden.create(payload);
+      return theDirListaOrden;
+      
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -50,13 +50,13 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para actualizar un municipio
+  // Método para actualizar un DirListaOrden
   public async update({ params, request, response }: HttpContextContract) {
     let payload;
 
     try {
-      // Validar los datos con MunicipioValidator
-      payload = await request.validate(MunicipioValidator);
+      // Validar los datos con DirListaOrdenValidator
+      payload = await request.validate(DirListaOrdenValidator);
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -66,18 +66,20 @@ export default class MunicipiosController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
-    // Obtener el municipio y actualizar los datos
-    const theMunicipio = await Municipio.findOrFail(params.id);
-    theMunicipio.nombre = payload.nombre;
-    theMunicipio.codigoPostal = payload.codigoPostal;
-    theMunicipio.departamento_id = payload.departamento_id;
-    return await theMunicipio.save();
+    // Obtener el DirListaOrden y actualizar los datos
+    const theDirListaOrden = await DirListaOrden.findOrFail(params.id);
+    theDirListaOrden.orden= payload.orden;
+    theDirListaOrden.descripcion = payload.descripcion;
+    theDirListaOrden.ruta_id= payload.ruta_id;
+    theDirListaOrden.direccion_id= payload.direccion_id;
+
+    return await theDirListaOrden.save();
   }
 
-  // Método para eliminar un municipio
+  // Método para eliminar un DirListaOrden
   public async delete({ params, response }: HttpContextContract) {
-    const theMunicipio = await Municipio.findOrFail(params.id);
+    const theDirListaOrden = await DirListaOrden.findOrFail(params.id);
     response.status(204);
-    return await theMunicipio.delete();
+    return await theDirListaOrden.delete();
   }
 }

@@ -1,28 +1,27 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Municipio from 'App/Models/Municipio';
+import Seguro from 'App/Models/Seguro';
 import { Exception } from '@adonisjs/core/build/standalone';
-import MunicipioValidator from 'App/Validators/MunicipioValidator'; // Importar el validador
+import SeguroValidator from 'App/Validators/SeguroValidator'; // Importar el validador
 
-export default class MunicipiosController {
+export default class SegurosController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theMunicipio;
+    let theSeguro;
+    
 
     try {
       if (params.id) {
-        theMunicipio = await Municipio.findOrFail(params.id);
-        await theMunicipio.load("departamento");
-        await theMunicipio.load('direcciones');
-        await theMunicipio.load('Operaciones')
-        return theMunicipio;
+        theSeguro = await Seguro.findOrFail(params.id);
+        await theSeguro.load('vehiculo');
+        return theSeguro;
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Municipio.query().paginate(page, perPage);
+          return await Seguro.query().paginate(page, perPage);
         } else {
-          return await Municipio.query();
+          return await Seguro.query();
         }
       }
     } catch (error) {
@@ -30,16 +29,23 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para crear un municipio
+  // Método para crear un Seguro
   public async create({ request, response }: HttpContextContract) {
     try {
-      // Validar datos usando el MunicipioValidator
-      const payload = await request.validate(MunicipioValidator);
+      // Validar datos usando el SeguroValidator
+      const payload = await request.validate(SeguroValidator);
 
-      // Crear el municipio si la validación es exitosa
-      const theMunicipio = await Municipio.create(payload);
-      return theMunicipio;
+      // Convertir fecha_nacimiento a Date
+      const fecha_inicio = payload.fecha_inicio.toJSDate();
+      const fecha_fin = payload.fecha_fin.toJSDate();
 
+      const theSeguro = await Seguro.create({
+        ...payload,
+        fecha_inicio: fecha_inicio,
+        fecha_fin: fecha_fin
+      });
+      return theSeguro;
+      
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -50,13 +56,13 @@ export default class MunicipiosController {
     }
   }
 
-  // Método para actualizar un municipio
+  // Método para actualizar un Seguro
   public async update({ params, request, response }: HttpContextContract) {
     let payload;
 
     try {
-      // Validar los datos con MunicipioValidator
-      payload = await request.validate(MunicipioValidator);
+      // Validar los datos con SeguroValidator
+      payload = await request.validate(SeguroValidator);
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -66,18 +72,21 @@ export default class MunicipiosController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
-    // Obtener el municipio y actualizar los datos
-    const theMunicipio = await Municipio.findOrFail(params.id);
-    theMunicipio.nombre = payload.nombre;
-    theMunicipio.codigoPostal = payload.codigoPostal;
-    theMunicipio.departamento_id = payload.departamento_id;
-    return await theMunicipio.save();
+    const fecha_inicio = payload.fecha_inicio.toJSDate();
+      const fecha_fin = payload.fecha_fin.toJSDate();
+    // Obtener el Seguro y actualizar los datos
+    const theSeguro = await Seguro.findOrFail(params.id);
+    theSeguro.fecha_inicio= fecha_inicio;
+    theSeguro.fecha_fin = fecha_fin;
+    theSeguro.compania_aseguradora= payload.compania_aseguradora;
+    theSeguro.vehiculo_id= payload.vehiculo_id;
+    return await theSeguro.save();
   }
 
-  // Método para eliminar un municipio
+  // Método para eliminar un Seguro
   public async delete({ params, response }: HttpContextContract) {
-    const theMunicipio = await Municipio.findOrFail(params.id);
+    const theSeguro = await Seguro.findOrFail(params.id);
     response.status(204);
-    return await theMunicipio.delete();
+    return await theSeguro.delete();
   }
 }
