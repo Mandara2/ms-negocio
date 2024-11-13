@@ -8,9 +8,9 @@ export default class extends BaseSchema {
       table.increments('id')
 
       table.string('localidad').notNullable()
-      table.string('tipoDireccion').notNullable()
+      table.string('tipo_direccion').notNullable()
       table.string('calle').notNullable()
-      table.string('numeroDireccion').notNullable()
+      table.string('numero_direccion').notNullable()
       table.string('referencias')
       table.integer('municipio_id').unsigned().references('municipios.id').onDelete('CASCADE').notNullable()
       

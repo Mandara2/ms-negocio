@@ -8,17 +8,17 @@ export default class MunicipioValidator {
     nombre:schema.string([rules.alphaNum({
       allow: ['space']
     }), rules.required()]),
-    codigoPostal: schema.string([rules.required(), rules.regex(/^[0-9]+$/)]),  // Asegura que el string contenga solo números
+    codigo_postal: schema.string([rules.required(), rules.regex(/^[0-9]+$/)]),  // Asegura que el string contenga solo números
     departamento_id: schema.number([
-      rules.exists({ table: 'departamento', column: 'id' }), rules.required() 
+      rules.exists({ table: 'departamentos', column: 'id' }), rules.required() 
     ])
   })
 
   public messages: CustomMessages = {
     'nombre.required': 'El nombre del municipio es obligatorio',
     'nombre.alphaNum': 'El nombre no debe contener caracteres especiales',
-    'codigoPostal.regex': 'El codigo postal solo debe contener numeros',
-    'codigoPostal.required': 'El codigo postal es obligatorio',
+    'codigo_postal.regex': 'El codigo postal solo debe contener numeros',
+    'codigo_postal.required': 'El codigo postal es obligatorio',
     'departamento_id.required': 'El codigo del departamento es obligatorio',
     'departamento_id.exists': 'El departamento debe existir'
   }

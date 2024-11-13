@@ -9,8 +9,8 @@ export default class extends BaseSchema {
 
       table.string('usuario_id').notNullable()
       table.string('identificacion').notNullable()
-      table.string('tipoDocumento').notNullable()
-      table.date('fechaNacimiento').notNullable()
+      table.string('tipo_documento').notNullable()
+      table.date('fecha_nacimiento').notNullable()
 
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

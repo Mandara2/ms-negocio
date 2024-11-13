@@ -11,13 +11,13 @@ export default class Direccione extends BaseModel {
   public localidad: string
 
   @column()
-  public tipoDireccion: string
+  public tipo_direccion: string
 
   @column()
   public calle: string
 
   @column()
-  public numeroDireccion: string
+  public numero_direccion: string
 
   @column()
   public referencias: string
@@ -26,14 +26,14 @@ export default class Direccione extends BaseModel {
   public municipio_id: number
   
   @hasOne(() => CentroDistribucion, {
-    foreignKey: 'municipio_id'
+    foreignKey: 'direccion_id'
   })
   public centrosDistribucion: HasOne <typeof CentroDistribucion>
 
-    @belongsTo(() => Municipio, {
+  @belongsTo(() => Municipio, {
       foreignKey: 'municipio_id'
     })
-    public municipio: BelongsTo<typeof Municipio>
+  public municipio: BelongsTo<typeof Municipio>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

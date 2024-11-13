@@ -5,23 +5,21 @@ export default class EmpresaValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
-    telefono: schema.string([
-      rules.required(),
-      rules.regex(/^[0-9-]+$/) // Solo permite números y guiones
-    ]),
-    tipoEmpresa:schema.string([rules.alphaNum({
+
+    nit:schema.string([rules.required()]),
+    tipo_empresa:schema.string([rules.alphaNum({
       allow: ['space', 'underscore', 'dash']
     }), rules.required()]),
 
-    direccionFiscal:schema.string([rules.alphaNum({
+    direccion_fiscal:schema.string([rules.alphaNum({
       allow: ['space', 'underscore', 'dash']
     })]),
     cliente_id: schema.number([
-      rules.exists({ table: 'cliente', column: 'id' })
+      rules.exists({ table: 'clientes', column: 'id' })
     ]),
 
-    personaNatural_id: schema.number([
-      rules.exists({ table: 'personaNatural', column: 'id' }) 
+    persona_natural_id: schema.number([
+      rules.exists({ table: 'persona_naturals', column: 'id' }) 
     ])
   })
 
@@ -29,10 +27,10 @@ export default class EmpresaValidator {
   public messages: CustomMessages = {
     'telefono.required': 'El campo telefono es obligatorio',
     'telefono.regex': 'El campo telefono solo acepta numeros y guiones',
-    'tipoEmpresa.alphaNum': 'El campo tipoEmpresa solo acepta como caracteres especiales el espacio, el guion bajo y medio',
-    'tipoEmpresa.required': 'El campo tipoEmpresa es obligatorio',
-    'direccionFiscal': 'El campo direccionFiscal solo acepta como caracteres especiales el espacio, el guion bajo y medio',
+    'tipo_empresa.alphaNum': 'El campo tipoEmpresa solo acepta como caracteres especiales el espacio, el guion bajo y medio',
+    'tipo_empresa.required': 'El campo tipoEmpresa es obligatorio',
+    'direccion_fiscal': 'El campo direccionFiscal solo acepta como caracteres especiales el espacio, el guion bajo y medio',
     'cliente_id.exists': 'El cliente_id debe existir en la base de datos',
-    'personaNatural_id.exists': 'La personaNatural_id debe existir en la base de datos'
+    'persona_natural_id.exists': 'La personaNatural_id debe existir en la base de datos'
   }
 }

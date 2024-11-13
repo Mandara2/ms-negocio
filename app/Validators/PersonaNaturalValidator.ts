@@ -10,12 +10,10 @@ export default class PersonaNaturalValidator {
       rules.regex(/^[0-9]+$/), // Solo permite dígitos del 0 al 9
       rules.required()
     ]),
-    tipoDocumento: schema.enum(
-      ['Cedula', 'Pasaporte', 'Cedula Extranjera'] as const, [
-        rules.required()
-      ] // Limita las opciones a estas tres
-    ),
-    fechaNacimiento: schema.date({
+    tipo_documento: schema.string([
+      rules.required()
+    ]),
+    fecha_nacimiento: schema.date({
       format: 'yyyy-MM-dd'
     }, [
       rules.required() // Hace que el campo sea obligatorio
@@ -26,9 +24,9 @@ export default class PersonaNaturalValidator {
   public messages: CustomMessages = {
     'identificacion.regex': 'El campo identificacion solo acepta numeros',
     'identificacion.required': 'El campo identificacion es obligatorio',
-    'tipoDocuento.enum': 'El tipo de documento debe ser uno de los siguientes: Cedula, Pasaporte, Cedula Extranjera',
-    'tipoDocumento.required': 'El campo tipoDocumento es obligatorio',
-    'fechaNacimiento.date.format': 'El campo fechaNacimiento debe estar en formato yyyy-MM-dd',
-    'fechaNacimiento.required': 'El campo fechaNacimiento es obligatorio'
+    'tipo_docuento.enum': 'El tipo de documento debe ser uno de los siguientes: Cedula, Pasaporte, Cedula Extranjera',
+    'tipo_documento.required': 'El campo tipoDocumento es obligatorio',
+    'fecha_nacimiento.date.format': 'El campo fechaNacimiento debe estar en formato yyyy-MM-dd',
+    'fecha_nacimiento.required': 'El campo fechaNacimiento es obligatorio'
   }
 }

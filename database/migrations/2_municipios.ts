@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments('id')
 
       table.string('nombre').notNullable()
-      table.string('codigoPostal').notNullable()
+      table.string('codigo_postal').notNullable()
       table.integer('departamento_id').unsigned().references('departamentos.id').onDelete('CASCADE').notNullable()
 
       table.timestamp('created_at', { useTz: true })

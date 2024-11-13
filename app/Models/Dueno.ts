@@ -13,7 +13,7 @@ export default class Dueno extends BaseModel {
   public telefono: string
 
   @column()
-  public fechaNacimiento: Date
+  public fecha_nacimiento: Date
 
   @column()
   public conductor_id: number
