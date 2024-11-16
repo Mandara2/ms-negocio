@@ -4,6 +4,9 @@ import Cliente from './Cliente'
 import PersonaNatural from './PersonaNatural'
 
 export default class Empresa extends BaseModel {
+
+  public static table = 'empresas';
+
   @column({ isPrimary: true })
   public id: number
 

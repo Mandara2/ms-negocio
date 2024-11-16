@@ -6,6 +6,9 @@ import Operacion from './Operacion'
 
 
 export default class Municipio extends BaseModel {
+
+  public static table = 'municipios';
+
   @column({ isPrimary: true })
   public id: number
 

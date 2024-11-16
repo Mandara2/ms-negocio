@@ -6,6 +6,9 @@ import DuenoVehiculo from './DuenoVehiculo'
 import VehiculoConductor from './VehiculoConductor';
 
 export default class Vehiculo extends BaseModel {
+
+  public static table = 'vehiculos';
+
   @column({ isPrimary: true })
   public id: number
 

@@ -4,6 +4,9 @@ import Conductor from './Conductor'
 import DuenoVehiculo from './DuenoVehiculo'
 
 export default class Dueno extends BaseModel {
+
+  public static table = 'duenos';
+
   @column({ isPrimary: true })
   public id: number
 

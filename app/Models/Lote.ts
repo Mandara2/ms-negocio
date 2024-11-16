@@ -4,6 +4,9 @@ import DirListaOrden from './DirListaOrden';
 //import Ruta from './Ruta';
 
 export default class Lote extends BaseModel {
+
+  public static table = 'lotes';
+
   @column({ isPrimary: true })
   public id: number
 
