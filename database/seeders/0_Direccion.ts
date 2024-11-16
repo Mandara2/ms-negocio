@@ -6,6 +6,7 @@ export default class DireccionSeeder extends BaseSeeder {
     // Creamos las direcciones y asignamos el `municipio_id` correspondiente
     await Database.table('direcciones').insert([
       {
+        id : 1,
         localidad: 'El Poblado',
         tipo_direccion: 'Residencial',
         calle: 'Cra 43A',
@@ -14,6 +15,7 @@ export default class DireccionSeeder extends BaseSeeder {
         municipio_id: 1,
       },
       {
+        id: 2,
         localidad: 'Ciudad Jardín',
         tipo_direccion: 'Comercial',
         calle: 'Calle 15',
@@ -22,6 +24,7 @@ export default class DireccionSeeder extends BaseSeeder {
         municipio_id: 2
       },
       {
+        id: 3,
         localidad: 'El Prado',
         tipo_direccion: 'Residencial',
         calle: 'Calle 72',
@@ -30,6 +33,7 @@ export default class DireccionSeeder extends BaseSeeder {
         municipio_id: 3
       },
       {
+        id: 4,
         localidad: 'Laureles',
         tipo_direccion: 'Residencial',
         calle: 'Cra 70',
@@ -38,6 +42,7 @@ export default class DireccionSeeder extends BaseSeeder {
         municipio_id: 4
       },
       {
+        id: 5,
         localidad: 'San Fernando',
         tipo_direccion: 'Comercial',
         calle: 'Av Roosevelt',

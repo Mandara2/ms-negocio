@@ -6,6 +6,7 @@ export default class EmpresaSeeder extends BaseSeeder {
     // Creamos las empresas con los atributos correspondientes
     await Database.table('empresas').insert([
       {
+        id: 1,
         nit: '900123456-1',
         tipo_empresa: 'hotel',
         direccion_fiscal: 'Calle 10 # 20-30, Bogotá',
@@ -13,6 +14,7 @@ export default class EmpresaSeeder extends BaseSeeder {
         persona_natural_id: 1, // Asegúrate de que esta persona natural exista en la tabla personaNatural
       },
       {
+        id: 2,
         nit: '901234567-2',
         tipo_empresa: 'restaurante',
         direccion_fiscal: 'Carrera 15 # 30-40, Medellín',
@@ -20,6 +22,7 @@ export default class EmpresaSeeder extends BaseSeeder {
         persona_natural_id: 2, // Asegúrate de que esta persona natural exista
       },
       {
+        id: 3,
         nit: '902345678-3',
         tipo_empresa: 'cafetería',
         direccion_fiscal: 'Avenida 5 # 10-20, Cali',
@@ -27,6 +30,7 @@ export default class EmpresaSeeder extends BaseSeeder {
         persona_natural_id: 3, // Asegúrate de que esta persona natural exista
       },
       {
+        id: 4,
         nit: '903456789-4',
         tipo_empresa: 'bar',
         direccion_fiscal: 'Calle 7 # 25-35, Barranquilla',
@@ -34,6 +38,7 @@ export default class EmpresaSeeder extends BaseSeeder {
         persona_natural_id: 4, // Asegúrate de que esta persona natural exista
       },
       {
+        id: 5,
         nit: '904567890-5',
         tipo_empresa: 'sala de eventos',
         direccion_fiscal: 'Transversal 2 # 12-34, Cartagena',

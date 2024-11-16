@@ -6,11 +6,36 @@ export default class MunicipioSeeder extends BaseSeeder {
 
     // Creamos los municipios y asignamos el `departamento_id`
     await Municipio.createMany([
-      { nombre: 'Medellín', codigoPostal: '050001', departamento_id: 1},
-      { nombre: 'Cali', codigoPostal: '760001', departamento_id: 2},
-      { nombre: 'Barranquilla', codigoPostal: '080001', departamento_id: 3},
-      { nombre: 'Envigado', codigoPostal: '055422', departamento_id: 4},
-      { nombre: 'Palmira', codigoPostal: '763531', departamento_id: 5},
+      { 
+        id: 1,
+        nombre: 'Medellín', 
+        codigoPostal: '050001', 
+        departamento_id: 1
+      },
+      { 
+        id: 2,
+        nombre: 'Cali',
+         codigoPostal: '760001', 
+         departamento_id: 2
+        },
+      { 
+        id: 3,
+        nombre: 'Barranquilla',
+         codigoPostal: '080001', 
+         departamento_id: 3
+        },
+      { 
+        id: 4,
+        nombre: 'Envigado',
+         codigoPostal: '055422',
+          departamento_id: 4},
+
+      { 
+        id: 5,
+        nombre: 'Palmira',
+         codigoPostal: '763531',
+          departamento_id: 5
+        },
     ])
   }
 }
