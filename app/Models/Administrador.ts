@@ -1,22 +1,35 @@
-import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { DateTime } from "luxon";
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  HasOne,
+  hasOne,
+} from "@ioc:Adonis/Lucid/Orm";
+import Servicio from "./Servicio";
 
 export default class Administrador extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
+  public id: number;
 
   @column()
-  public usuario_id: string
+  public usuario_id: string;
 
   @column()
-  public tipo: string
+  public tipo: string;
 
   @column()
-  public telefono: string
+  public telefono: string;
+
+  @hasOne(() => Servicio, {
+    foreignKey: "administrador_id",
+  })
+  public servicio: HasOne<typeof Servicio>;
 
   @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  public createdAt: DateTime;
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  public updatedAt: DateTime;
 }
