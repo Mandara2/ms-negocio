@@ -2,6 +2,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Cuota from 'App/Models/Cuota';
 import { Exception } from '@adonisjs/core/build/standalone';
 import CuotaValidator from 'App/Validators/CuotaValidator'; // Importar el validador
+import axios from 'axios';
+import Env from '@ioc:Adonis/Core/Env';
 
 export default class CuotasController {
   // Método de búsqueda
@@ -37,6 +39,7 @@ export default class CuotasController {
 
       // Crear el Cuota si la validación es exitosa
       const theCuota = await Cuota.create(payload);
+      
       return theCuota;
       
     } catch (error) {
