@@ -6,8 +6,8 @@ export default class extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments("id");
-      table.string("nombre").notNullable;
-      table.date("fecha_vencimiento").notNullable;
+      table.string("nombre").notNullable();
+      table.date("fecha_vencimiento").notNullable();
       table.integer("cliente_id").unsigned().references("clientes.id").notNullable();
       table.integer('lote_id').unsigned().references('lotes.id')
       table.timestamp("created_at", { useTz: true });

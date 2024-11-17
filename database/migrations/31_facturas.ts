@@ -7,7 +7,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments("id");
 
-      table.string("fecha_hora");
+      table.date("fecha_hora");
       table.integer("monto").notNullable()
       table.integer('cuota_id').unsigned().references('cuotas.id');
       table.integer('gastos_id').unsigned().references('gastos.id');

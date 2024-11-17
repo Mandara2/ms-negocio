@@ -8,7 +8,7 @@ export default class Factura extends BaseModel {
   public id: number;
 
   @column()
-  public fecha_hora: DateTime;
+  public fecha_hora: Date;
 
   @column()
   public monto: number;
