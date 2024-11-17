@@ -61,6 +61,7 @@ export default class EmpresasController {
       theEmpresa.tipo_empresa = payload.tipo_empresa;
       theEmpresa.direccion_fiscal = payload.direccion_fiscal;
       theEmpresa.cliente_id = payload.cliente_id;
+      theEmpresa.persona_natural_id = payload.persona_natural_id;
       return await theEmpresa.save();
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible

@@ -12,7 +12,6 @@ export default class extends BaseSchema {
       table.string('direccion_fiscal')
       table.integer('cliente_id').unsigned().references('clientes.id')
       table.integer('persona_natural_id').unsigned().references('personas_naturales.id')
-      
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

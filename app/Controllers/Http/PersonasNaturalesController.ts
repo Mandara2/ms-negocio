@@ -15,6 +15,7 @@ export default class PersonasNaturalesController {
         // Buscar persona natural por ID
         thePersonaNatural = await PersonaNatural.findOrFail(params.id);
         await thePersonaNatural.load('cliente');
+        await thePersonaNatural.load('empresa');
 
         // Llamada al microservicio de usuarios
         const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${thePersonaNatural.usuario_id}`, {
@@ -63,7 +64,8 @@ export default class PersonasNaturalesController {
       // Crear la persona natural
       const thePersonaNatural = await PersonaNatural.create({
         ...payload,
-        fecha_nacimiento: fechaNacimientoDate
+        fecha_nacimiento: fechaNacimientoDate,
+        usuario_id: body.usuario_id 
       });
       
       return thePersonaNatural;

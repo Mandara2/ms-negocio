@@ -17,9 +17,8 @@ export default class EmpresaValidator {
     cliente_id: schema.number([
       rules.exists({ table: 'clientes', column: 'id' })
     ]),
-
     persona_natural_id: schema.number([
-      rules.exists({ table: 'persona_naturals', column: 'id' }) 
+      rules.exists({ table: 'personas_naturales', column: 'id' })
     ])
   })
 

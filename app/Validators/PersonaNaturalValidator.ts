@@ -17,7 +17,13 @@ export default class PersonaNaturalValidator {
       format: 'yyyy-MM-dd'
     }, [
       rules.required() // Hace que el campo sea obligatorio
-    ])
+    ]),
+    empresa_id: schema.number([
+      rules.exists({ table: 'empresas', column: 'id' }), rules.required() 
+    ]),
+    cliente_id: schema.number([
+      rules.exists({ table: 'clientes', column: 'id' }), rules.required() 
+    ]),
   })
 
  
@@ -27,6 +33,7 @@ export default class PersonaNaturalValidator {
     'tipo_docuento.enum': 'El tipo de documento debe ser uno de los siguientes: Cedula, Pasaporte, Cedula Extranjera',
     'tipo_documento.required': 'El campo tipoDocumento es obligatorio',
     'fecha_nacimiento.date.format': 'El campo fechaNacimiento debe estar en formato yyyy-MM-dd',
-    'fecha_nacimiento.required': 'El campo fechaNacimiento es obligatorio'
+    'fecha_nacimiento.required': 'El campo fechaNacimiento es obligatorio',
+    'vehiculo_id.exists': 'La empresa debe existir en la base de datos',
   }
 }
