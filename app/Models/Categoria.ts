@@ -19,7 +19,7 @@ export default class Categoria extends BaseModel {
   public descripcion: string;
 
   @column()
-  public categoria_padre: string | null;
+  public categoria_padre: number;
 
   @hasOne(() => Categoria, {
     foreignKey: "categoria_padre",

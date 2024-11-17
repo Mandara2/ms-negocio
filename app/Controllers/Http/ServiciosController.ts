@@ -37,7 +37,15 @@ export default class ServiciosController {
       const payload = await request.validate(ServicioValidator);
 
       // Crear la Servicio si la validación es exitosa
-      const theServicio = await Servicio.create(payload);
+      const fecha_date = payload.fecha.toJSDate();
+          
+      const theServicio = await Servicio.create({
+        ...payload,
+        fecha: fecha_date,
+        });
+
+
+
       return theServicio;
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
@@ -61,7 +69,11 @@ export default class ServiciosController {
       payload = await request.validate(ServicioValidator);
 
       // Obtener la Servicio y actualizar los datos
-      const theServicio: Servicio = await Servicio.findOrFail(params.id);
+      const theServicio: Servicio = await Servicio.findOrFail(params.id)
+
+      const fecha = payload.fecha.toJSDate();
+
+      theServicio.fecha = fecha;
       theServicio.descripcion = payload.descripcion;
       theServicio.administrador_id = payload.administrador_id;
       return await theServicio.save();
