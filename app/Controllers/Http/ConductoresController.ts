@@ -84,6 +84,7 @@ export default class ConductoresController {
 
   // Método para actualizar un conductor
   public async update({ params, request, response }: HttpContextContract) {
+    //SIEMRPE PARA LAS FECHAS
     let payload;
 
     try {

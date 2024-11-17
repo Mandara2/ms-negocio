@@ -1,7 +1,7 @@
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Municipio from 'App/Models/Municipio';
-import { Exception } from '@adonisjs/core/build/standalone';
-import MunicipioValidator from 'App/Validators/MunicipioValidator'; // Importar el validador
+import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
+import Municipio from "App/Models/Municipio";
+import { Exception } from "@adonisjs/core/build/standalone";
+import MunicipioValidator from "App/Validators/MunicipioValidator"; // Importar el validador
 
 export default class MunicipiosController {
   // Método de búsqueda
@@ -11,14 +11,15 @@ export default class MunicipiosController {
     try {
       if (params.id) {
         theMunicipio = await Municipio.findOrFail(params.id);
+        //CARGAS MUY IMPORTANTES
         await theMunicipio.load("departamento");
-        await theMunicipio.load('direcciones');
-        await theMunicipio.load('Operaciones')
+        await theMunicipio.load("direcciones");
+        await theMunicipio.load("Operaciones");
         return theMunicipio;
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
-          const page = request.input('page', 1);
+          const page = request.input("page", 1);
           const perPage = request.input("per_page", 20);
           return await Municipio.query().paginate(page, perPage);
         } else {
@@ -26,7 +27,10 @@ export default class MunicipiosController {
         }
       }
     } catch (error) {
-      throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
+      throw new Exception(
+        error.message || "Error al procesar la solicitud",
+        error.status || 500
+      );
     }
   }
 
@@ -39,14 +43,16 @@ export default class MunicipiosController {
       // Crear el municipio si la validación es exitosa
       const theMunicipio = await Municipio.create(payload);
       return theMunicipio;
-
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
         return response.badRequest({ errors: error.messages.errors });
       }
       // Para cualquier otro tipo de error, lanzar una excepción genérica
-      throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
+      throw new Exception(
+        error.message || "Error al procesar la solicitud",
+        error.status || 500
+      );
     }
   }
 
@@ -63,7 +69,10 @@ export default class MunicipiosController {
         return response.badRequest({ errors: error.messages.errors });
       }
       // Si es otro tipo de error, lanzar una excepción genérica
-      throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
+      throw new Exception(
+        error.message || "Error al procesar la solicitud",
+        error.status || 500
+      );
     }
 
     // Obtener el municipio y actualizar los datos
