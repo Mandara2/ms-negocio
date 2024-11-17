@@ -12,6 +12,9 @@ import CategoriaProducto from "./CategoriaProducto";
 import Lote from "./Lote";
 
 export default class Producto extends BaseModel {
+
+  public static table = 'productos';
+
   @column({ isPrimary: true })
   public id: number;
 

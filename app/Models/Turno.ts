@@ -3,6 +3,9 @@ import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import Conductor from './Conductor'
 
 export default class Turno extends BaseModel {
+
+  public static table = 'turnos';
+
   @column({ isPrimary: true })
   public id: number
 

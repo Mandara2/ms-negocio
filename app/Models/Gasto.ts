@@ -13,6 +13,9 @@ import Servicio from "./Servicio";
 import Factura from "./Factura";
 
 export default class Gasto extends BaseModel {
+
+  public static table = 'gastos';
+
   @column({ isPrimary: true })
   public id: number;
 
