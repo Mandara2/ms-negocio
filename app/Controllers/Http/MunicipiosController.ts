@@ -11,7 +11,7 @@ export default class MunicipiosController {
     try {
       if (params.id) {
         theMunicipio = await Municipio.findOrFail(params.id);
-        //CARGAS MUY IMPORTANTES
+        //CARGAS MUY IMPORTANTES--
         await theMunicipio.load("departamento");
         await theMunicipio.load("direcciones");
         await theMunicipio.load("Operaciones");

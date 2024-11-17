@@ -1,6 +1,15 @@
 import { DateTime } from "luxon";
-import { BaseModel, BelongsTo, belongsTo, column, HasOne, hasOne } from "@ioc:Adonis/Lucid/Orm";
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  HasOne,
+  hasOne,
+} from "@ioc:Adonis/Lucid/Orm";
 import Administrador from "./Administrador";
+import Restaurante from "./Restaurante";
+import Hotel from "./Hotel";
 
 export default class Servicio extends BaseModel {
   @column({ isPrimary: true })
@@ -16,9 +25,19 @@ export default class Servicio extends BaseModel {
   public administrador_id: number;
 
   @belongsTo(() => Administrador, {
-    foreignKey: 'administrador_id'
+    foreignKey: "administrador_id",
   })
-  public administrador: BelongsTo<typeof Administrador>
+  public administrador: BelongsTo<typeof Administrador>;
+
+  @hasOne(() => Restaurante, {
+    foreignKey: "servicio_id",
+  })
+  public restaurante: HasOne<typeof Restaurante>;
+
+  @hasOne(() => Hotel, {
+    foreignKey: "servicio_id",
+  })
+  public hotel: HasOne<typeof Hotel>;
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;

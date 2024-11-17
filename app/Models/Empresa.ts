@@ -26,7 +26,7 @@ export default class Empresa extends BaseModel {
     foreignKey: 'cliente_id'
   })
   public cliente: BelongsTo<typeof Cliente>
-
+ 
   @belongsTo(() => PersonaNatural, {
     foreignKey: 'cliente_id'
   })

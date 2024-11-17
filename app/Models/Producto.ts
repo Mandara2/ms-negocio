@@ -30,13 +30,12 @@ export default class Producto extends BaseModel {
   @belongsTo(() => Cliente, {
     foreignKey: "cliente_id",
   })
-
   public cliente: BelongsTo<typeof Cliente>;
 
   @belongsTo(() => Lote, {
     foreignKey: "lote_id",
   })
-  public Lote: BelongsTo<typeof Lote>;
+  public lote: BelongsTo<typeof Lote>;
 
   @hasMany(() => CategoriaProducto, {
     foreignKey: "producto_id",

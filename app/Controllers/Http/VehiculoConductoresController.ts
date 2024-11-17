@@ -11,6 +11,7 @@ export default class VehiculoConductoresController {
 
     try {
       if (params.id) {
+        // CARGAR LO QUE SE
         theVehiculoConductor = await VehiculoConductor.findOrFail(params.id);
         await theVehiculoConductor.load('vehiculo');
         await theVehiculoConductor.load('conductor');
