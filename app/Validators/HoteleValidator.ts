@@ -6,7 +6,11 @@ export default class HoteleValidator {
 
   
   public schema = schema.create({
-    estrellas: schema.number([rules.unsigned(), rules.required()]),
+    estrellas: schema.number([
+      rules.unsigned(),
+      rules.required(),
+      rules.range(0, 5),
+    ]),
     nombre:schema.string([rules.alphaNum({
       allow: ['space']
     }), rules.required()]),

@@ -13,9 +13,6 @@ export default class CategoriaValidator {
     descripcion:schema.string([rules.alphaNum({
       allow: ['space']
     }), rules.required()]),
-    categoria_padre: schema.number([
-      rules.exists({ table: 'categorias_productos', column: 'id' }), rules.required() 
-    ])
 
   })
 
