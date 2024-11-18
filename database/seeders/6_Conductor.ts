@@ -6,6 +6,7 @@ export default class ConductorSeeder extends BaseSeeder {
     // Creamos los conductores con los atributos correspondientes
     await Database.table('conductores').insert([
       {
+        id: 1,
         telefono: '3112345678',
         numero_licencia: '123456789', // Solo números
         fecha_vencimiento_licencia: new Date('2025-12-31'),
@@ -13,6 +14,7 @@ export default class ConductorSeeder extends BaseSeeder {
         usuario_id: "6718f802175a5a04241b6919"
       },
       {
+        id: 2,
         telefono: '3123456789',
         numero_licencia: '987654321', // Solo números
         fecha_vencimiento_licencia: new Date('2024-11-30'),
@@ -20,6 +22,7 @@ export default class ConductorSeeder extends BaseSeeder {
         usuario_id: "6728e7a3bc0f3e155b567b24"
       },
       {
+        id: 3,
         telefono: '3134567890',
         numero_licencia: '456789123', // Solo números
         fecha_vencimiento_licencia: new Date('2026-01-31'),
@@ -27,6 +30,7 @@ export default class ConductorSeeder extends BaseSeeder {
         usuario_id: "6728e88fbc0f3e155b567b27"
       },
       {
+        id: 4,
         telefono: '3145678901',
         numero_licencia: '321654987', // Solo números
         fecha_vencimiento_licencia: new Date('2025-03-15'),
@@ -34,6 +38,7 @@ export default class ConductorSeeder extends BaseSeeder {
         usuario_id: "672967ad1fff306b2ed2d80a"
       },
       {
+        id: 5,
         telefono: '3156789012',
         numero_licencia: '654321789', // Solo números
         fecha_vencimiento_licencia: new Date('2023-07-19'),

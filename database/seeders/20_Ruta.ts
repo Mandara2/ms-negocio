@@ -6,6 +6,7 @@ export default class extends BaseSeeder {
     // Write your database queries inside the run method
     await Database.table('rutas').insert([
       {
+        id: 1,
         punto_inicio: 'cr2 #16-20',
         punto_destino: 'cr3 #20-13',
         distancia: 30,
@@ -14,6 +15,7 @@ export default class extends BaseSeeder {
         vehiculo_conductor_id:1
       },
       {
+        id: 2,
         punto_inicio: 'cll10 #30-15',
         punto_destino: 'cr15 #40-25',
         distancia: 45,
@@ -22,6 +24,7 @@ export default class extends BaseSeeder {
         vehiculo_conductor_id: 2
     },
     {
+      id: 3,
         punto_inicio: 'cr5 #22-30',
         punto_destino: 'cll7 #18-40',
         distancia: 25,
@@ -30,6 +33,7 @@ export default class extends BaseSeeder {
         vehiculo_conductor_id: 3
     },
     {
+      id: 4,
         punto_inicio: 'av6 #11-19',
         punto_destino: 'cr2 #33-10',
         distancia: 35,
@@ -38,6 +42,7 @@ export default class extends BaseSeeder {
         vehiculo_conductor_id: 4
     },
     {
+      id: 5,
         punto_inicio: 'cr10 #5-27',
         punto_destino: 'cll3 #12-22',
         distancia: 40,

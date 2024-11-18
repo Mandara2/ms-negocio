@@ -6,29 +6,34 @@ export default class extends BaseSeeder {
     // Write your database queries inside the run method
     await Database.table('lotes').insert([
       {
+        id: 1,
         peso:4,
         volumen:80,
-        dir_lista_orden_id:21
+        dir_lista_orden_id:2
       },
       {
+        id: 2,
         peso: 5,
         volumen: 90,
-        dir_lista_orden_id: 22
+        dir_lista_orden_id: 3
     },
     {
+      id: 3,
         peso: 3.5,
         volumen: 75,
-        dir_lista_orden_id: 23
+        dir_lista_orden_id: 4
     },
     {
+      id: 4,
         peso: 6,
         volumen: 85,
-        dir_lista_orden_id: 24
+        dir_lista_orden_id: 5
     },
     {
+      id: 5,
         peso: 4.5,
         volumen: 95,
-        dir_lista_orden_id: 25
+        dir_lista_orden_id: 6
     }
     ])
   }
