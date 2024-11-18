@@ -8,6 +8,9 @@ import {
 import Servicio from "./Servicio";
 
 export default class Administrador extends BaseModel {
+
+  public static table = "administradores"
+
   @column({ isPrimary: true })
   public id: number;
 

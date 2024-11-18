@@ -13,6 +13,9 @@ import Contrato from "./Contrato";
 import Producto from "./Producto";
 
 export default class Cliente extends BaseModel {
+
+  public static table = 'clientes'
+
   @column({ isPrimary: true })
   public id: number;
 

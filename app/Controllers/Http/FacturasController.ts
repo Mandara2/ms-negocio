@@ -57,8 +57,15 @@ export default class FacturasController {
       // Validar los datos utilizando el validador de Factura
       const payload = await request.validate(FacturaValidator);
 
-      // Crear la Factura si la validación es exitosa
-      const theFactura = await Factura.create(payload);
+      const fecha_hora = payload.fecha_hora.toJSDate();
+
+      const theFactura = await Factura.create({
+        ...payload,
+        fecha_hora: fecha_hora
+      });
+
+
+
       return theFactura;
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
@@ -83,7 +90,8 @@ export default class FacturasController {
 
       // Obtener la Factura y actualizar los datos
       const theFactura: Factura = await Factura.findOrFail(params.id);
-      theFactura.fecha_hora = payload.fecha_hora;
+      const fecha_hora = payload.fecha_hora.toJSDate();
+      theFactura.fecha_hora = fecha_hora;
       theFactura.monto = payload.monto;
       theFactura.cuota_id = payload.cuota_id;
       theFactura.gastos_id = payload.cuota_id;

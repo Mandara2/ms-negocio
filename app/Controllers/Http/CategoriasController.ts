@@ -33,7 +33,11 @@ export default class CategoriasController {
       const payload = await request.validate(CategoriaValidator);
 
       // Crear la Categoria si la validación es exitosa
-      const theCategoria = await Categoria.create(payload);
+      const body = request.body();
+      const theCategoria = await Categoria.create({
+        ...payload,
+        categoria_padre: body.categoria_padre,
+      });
       return theCategoria;
 
     } catch (error) {

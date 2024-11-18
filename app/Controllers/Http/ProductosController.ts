@@ -36,9 +36,16 @@ export default class ProductosController {
       // Validar los datos utilizando el validador de Producto
       const payload = await request.validate(ProductoValidator);
 
+
+      const fecha_vencimiento_date = payload.fecha_vencimiento.toJSDate();
       // Crear la Producto si la validación es exitosa
-      const theProducto = await Producto.create(payload);
+      const theProducto = await Producto.create({
+        ...payload,
+        fecha_vencimiento: fecha_vencimiento_date,
+        });
       return theProducto;
+
+
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -60,10 +67,11 @@ export default class ProductosController {
       // Validar los datos utilizando el validador de Producto
       payload = await request.validate(ProductoValidator);
 
-      // Obtener la Producto y actualizar los datos
+      const fecha_vencimiento = payload.fecha_vencimiento.toJSDate();
+
       const theProducto: Producto = await Producto.findOrFail(params.id);
       theProducto.nombre = payload.nombre;
-      theProducto.fecha_vencimiento = payload.fecha_vencimiento;
+      theProducto.fecha_vencimiento = fecha_vencimiento;
       theProducto.cliente_id = payload.cliente_id;
       theProducto.lote_id = payload.lote_id;
       return await theProducto.save();

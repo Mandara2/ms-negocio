@@ -12,6 +12,9 @@ import Producto from "./Producto";
 //import Ruta from './Ruta';
 
 export default class Lote extends BaseModel {
+
+  public static table = 'lotes';
+
   @column({ isPrimary: true })
   public id: number;
 

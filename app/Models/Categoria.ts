@@ -9,6 +9,9 @@ import {
 } from "@ioc:Adonis/Lucid/Orm";
 
 export default class Categoria extends BaseModel {
+
+  public static table = 'categorias';
+
   @column({ isPrimary: true })
   public id: number;
 
@@ -19,7 +22,7 @@ export default class Categoria extends BaseModel {
   public descripcion: string;
 
   @column()
-  public categoria_padre: string | null;
+  public categoria_padre: number | null;
 
   @hasOne(() => Categoria, {
     foreignKey: "categoria_padre",
