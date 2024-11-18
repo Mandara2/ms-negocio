@@ -6,7 +6,6 @@ import axios from 'axios';
 import Env from '@ioc:Adonis/Core/Env';
 import Cliente from 'App/Models/Cliente';
 import Ruta from 'App/Models/Ruta';
-import RutasController from 'app/Controllers/Http/RutasController';
 
 export default class ContratosController {
   // Método de búsqueda
@@ -38,7 +37,6 @@ export default class ContratosController {
     try {
       // Validar datos usando el ContratoValidator
       const payload = await request.validate(ContratoValidator);
-      const body = request.body()
       console.log("ESTE ES EL CLIENTEEEEEEEEEE");
       console.log(payload.cliente_id);
       

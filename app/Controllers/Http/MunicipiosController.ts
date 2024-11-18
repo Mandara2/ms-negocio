@@ -14,7 +14,7 @@ export default class MunicipiosController {
         //CARGAS MUY IMPORTANTES--
         await theMunicipio.load("departamento");
         await theMunicipio.load("direcciones");
-        await theMunicipio.load("Operaciones");
+        await theMunicipio.load("operaciones");
         return theMunicipio;
       } else {
         const data = request.all();

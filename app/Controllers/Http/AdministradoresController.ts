@@ -56,11 +56,13 @@ export default class AdministradoresController {
 
       // Verificar si no se encontró el usuario
       if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-        throw new Exception('No se encontró información de usuario, verifique que el código sea correcto', 404);
+        return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
       }
 
       // Crear el administrador si la validación es exitosa
-      const theAdministrador = await Administrador.create(payload);
+      const theAdministrador = await Administrador.create({
+        ...payload,
+      usuario_id: body.usuario_id});
       return theAdministrador;
 
     } catch (error) {
@@ -89,7 +91,7 @@ export default class AdministradoresController {
 
       // Verificar si no se encontró el usuario
       if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-        throw new Exception('No se encontró información de usuario, verifique que el código sea correcto', 404);
+        return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
       }
 
       // Obtener el administrador y actualizar los datos
