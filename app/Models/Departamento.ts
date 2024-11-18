@@ -3,6 +3,9 @@ import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import Municipio from './Municipio'
 
 export default class Departamento extends BaseModel {
+
+  public static table = 'departamentos'
+
   @column({ isPrimary: true })
   public id: number
 
