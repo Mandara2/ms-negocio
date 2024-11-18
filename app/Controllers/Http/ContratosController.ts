@@ -2,6 +2,9 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Contrato from 'App/Models/Contrato';
 import { Exception } from '@adonisjs/core/build/standalone';
 import ContratoValidator from 'App/Validators/ContratoValidator'; // Importar el validador
+import axios from 'axios';
+import Env from '@ioc:Adonis/Core/Env';
+import Cliente from 'App/Models/Cliente';
 
 export default class ContratosController {
   // Método de búsqueda
@@ -33,16 +36,57 @@ export default class ContratosController {
     try {
       // Validar datos usando el ContratoValidator
       const payload = await request.validate(ContratoValidator);
+      console.log("ESTE ES EL CLIENTEEEEEEEEEE");
+      
+      console.log(payload.cliente_id);
+      
+      const cliente = await Cliente.find(payload.cliente_id);
+      console.log(cliente?.usuario_id);
+
+      if (!cliente) {
+        throw new Exception("No se puedo encontrar al cliente")
+      }
+      
+      //const usuarioId = cliente.usuario;
+
+      const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${cliente.usuario_id}`, {
+        headers: { Authorization: request.headers().authorization || '' }
+      });
+
+      console.log("Este es el userResponse");
+      console.log(userResponse.data.email);
+
+       const email = {
+        subject: "Nuevo contrato!",
+      recipient: userResponse.data.email, // Cambia esto por el correo del destinatario
+      body_html: `<p>Nuevo contrato generado. Fecha de generacion: ${payload.fecha}, 
+      distancia total ${payload.distancia_total}, costo total ${payload.costo_total}.</p>`
+      }
+
+      // Envio el correo al momento de crear el contrato al conductor
+      const responseEmail = await axios.post(`${Env.get('MS_NOTIFICACIONES')}/send-email`, email, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log(responseEmail);
+      
+      
+      
 
       // Convertir fecha_nacimiento a Date
       const fecha = payload.fecha.toJSDate();
+
+     
 
       const theContrato = await Contrato.create({
         ...payload,
         fecha: fecha
       });
-      // Crear el Contrato si la validación es exitosa
       
+
+
       return theContrato;
       
     } catch (error) {
