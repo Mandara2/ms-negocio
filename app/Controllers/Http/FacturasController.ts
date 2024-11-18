@@ -4,6 +4,28 @@ import Factura from "App/Models/Factura";
 import FacturaValidator from "App/Validators/FacturaValidator";
 
 export default class FacturasController {
+
+  // Método para verificar si una factura existe
+  public async checkFacturaExists({ params, response }: HttpContextContract) {
+    try {
+      const facturaId = params.id;  // Obtiene el ID de la factura desde los parámetros de la URL
+
+      // Verificar si la factura existe
+      const factura = await Factura.find(facturaId);
+
+      if (!factura) {
+        // Si no existe, devolver un error 404
+        return response.status(404).json({ error: 'Factura no encontrada' });
+      }
+
+      // Si la factura existe, devolver una respuesta positiva
+      return response.status(200).json({ success: true, message: 'Factura encontrada' });
+    } catch (error) {
+      return response.status(500).json({ error: 'Error al verificar la factura' });
+    }
+  }
+
+  // Metodo de buscar
   public async find({ request, params }: HttpContextContract) {
     try {
       if (params.id) {
