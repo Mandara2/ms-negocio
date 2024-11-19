@@ -18,9 +18,10 @@ export default class PersonaNaturalValidator {
     }, [
       rules.required() // Hace que el campo sea obligatorio
     ]),
-    empresa_id: schema.number([
-      rules.exists({ table: 'empresas', column: 'id' })
+    cliente_id: schema.number([
+      rules.exists({ table: 'clientes', column: 'id' }), rules.required() 
     ])
+    
   })
 
  

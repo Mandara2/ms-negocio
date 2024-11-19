@@ -36,9 +36,12 @@ export default class OperacionesController {
       // Validar datos usando el OperacionValidator
       console.log("vamoooooooooooooooos");
       
-      console.log(request);
+      console.log(request.body());
       
       const payload = await request.validate(OperacionValidator);
+
+      console.log(payload);
+      
 
       // Convertir fecha_nacimiento a Date
       const fecha_inicio = payload.fecha_inicio.toJSDate();

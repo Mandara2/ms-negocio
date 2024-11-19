@@ -26,7 +26,7 @@ export default class PersonasNaturalesController {
           return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
         }
 
-        return { cliente: thePersonaNatural, usuario: userResponse.data };
+        return {thePersonaNatural, usuario: userResponse.data };
       } else {
         const data = request.all();
         if ('page' in data && 'per_page' in data) {
