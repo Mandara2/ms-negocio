@@ -17,14 +17,23 @@ export default class FacturasController {
         return response.status(404).json({ error: "Factura no encontrada" });
       }
 
-      // Si la factura existe, devolver una respuesta positiva
+      // Si la factura ya está en estado "PAGADO", devolver un error 404
+      if (factura.estado === "PAGADO") {
+        return response.status(404).json({ error: "Factura ya está en estado 'PAGADO'" });
+      }
+
+      // Si la factura existe y no está en "PAGADO", actualizar su estado a "PAGADO"
+      factura.estado = "PAGADO";
+      await factura.save();
+
+      // Devolver una respuesta indicando que la factura se actualizó a "PAGADO"
       return response
         .status(200)
-        .json({ success: true, message: "Factura encontrada" });
+        .json({ success: true, message: "Factura encontrada y actualizada a 'PAGADO'" });
     } catch (error) {
       return response
         .status(500)
-        .json({ error: "Error al verificar la factura" });
+        .json({ error: "Error al verificar y actualizar la factura" });
     }
   }
 
