@@ -10,10 +10,10 @@ export default class Turno extends BaseModel {
   public id: number
 
   @column()
-  public fecha_inicio: String
+  public fecha_inicio: Date
 
   @column()
-  public fecha_fin: String
+  public fecha_fin: Date
 
   @column()
   public conductor_id:number

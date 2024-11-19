@@ -7,8 +7,6 @@ export default class CuotasController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
     let theCuota;
-    
-
     try {
       if (params.id) {
         theCuota = await Cuota.findOrFail(params.id);

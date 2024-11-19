@@ -7,14 +7,15 @@ import PersonaNaturalValidator from 'App/Validators/PersonaNaturalValidator'; //
 
 export default class PersonasNaturalesController {
   // Método para encontrar personas naturales
-  public async find({ request, params }: HttpContextContract) {
+  public async find({ request, params, response}: HttpContextContract) {
     let thePersonaNatural;
 
     try {
       if (params.id) {
         // Buscar persona natural por ID
         thePersonaNatural = await PersonaNatural.findOrFail(params.id);
-        await thePersonaNatural.load('cliente');
+        //await thePersonaNatural.load('cliente');
+        await thePersonaNatural.load('empresas')
 
         // Llamada al microservicio de usuarios
         const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${thePersonaNatural.usuario_id}`, {
@@ -22,7 +23,7 @@ export default class PersonasNaturalesController {
         });
 
         if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-          throw new Exception('No se encontró información de usuario en el microservicio', 404);
+          return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
         }
 
         return { cliente: thePersonaNatural, usuario: userResponse.data };
@@ -54,7 +55,7 @@ export default class PersonasNaturalesController {
       });
 
       if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-        throw new Error('No se encontró información de usuario, verifique que el código sea correcto');
+        return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
       }
 
       // Convertir fecha_nacimiento a Date
@@ -63,6 +64,7 @@ export default class PersonasNaturalesController {
       // Crear la persona natural
       const thePersonaNatural = await PersonaNatural.create({
         ...payload,
+        usuario_id: body.usuario_id,
         fecha_nacimiento: fechaNacimientoDate
       });
       
@@ -91,7 +93,7 @@ export default class PersonasNaturalesController {
       });
 
       if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-        throw new Error('No se encontró información de usuario, verifique que el código sea correcto');
+        return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
       }
 
       // Convertir fecha_nacimiento a Date

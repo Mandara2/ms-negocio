@@ -4,8 +4,7 @@ import Cliente from './Cliente'
 import PersonaNatural from './PersonaNatural'
 
 export default class Empresa extends BaseModel {
-
-  public static table = 'empresas';
+  public static table = 'empresas'
 
   @column({ isPrimary: true })
   public id: number
@@ -23,17 +22,17 @@ export default class Empresa extends BaseModel {
   public cliente_id: number
 
   @column()
-  public persona_natural_id: number
+  public persona_natural_id: number 
 
-  @belongsTo(() => Cliente, {
-    foreignKey: 'cliente_id'
-  })
-  public cliente: BelongsTo<typeof Cliente>
- 
   @belongsTo(() => PersonaNatural, {
     foreignKey: 'persona_natural_id'
   })
-  public PersonaNatural: BelongsTo<typeof PersonaNatural>
+  public personaNatural: BelongsTo<typeof PersonaNatural>
+
+  @belongsTo(() => Cliente, {
+     foreignKey: 'cliente_id'
+  })
+  public cliente: BelongsTo<typeof Cliente>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

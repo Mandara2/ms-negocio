@@ -12,7 +12,7 @@ export default class EmpresasController {
         console.log(theEmpresa);
         
         await theEmpresa.load('cliente');
-        await theEmpresa.load('PersonaNatural');
+        await theEmpresa.load('personaNatural');
         console.log(theEmpresa);
         
         return theEmpresa;

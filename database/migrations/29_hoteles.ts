@@ -10,7 +10,7 @@ export default class extends BaseSchema {
       table.integer("estrellas");
       table.string("nombre").notNullable();
       table.string('ubicacion')
-      table.integer('servicio_id').unsigned().references('servicios.id')
+      table.integer('servicio_id').unsigned().references('servicios.id').onDelete('CASCADE')
       table.timestamp("created_at", { useTz: true });
       table.timestamp("updated_at", { useTz: true });
     });

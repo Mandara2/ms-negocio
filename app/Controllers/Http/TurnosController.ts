@@ -34,7 +34,17 @@ export default class TurnosController {
     try {
       // Validar datos usando el TurnoValidator
       const payload = await request.validate(TurnoValidator);
-      const theTurno = await Turno.create(payload);
+
+
+
+      const fecha_inicio = payload.fecha_inicio.toJSDate();
+      const fecha_fin = payload.fecha_fin.toJSDate();
+
+      const theTurno = await Turno.create({
+        ...payload,
+        fecha_inicio: fecha_inicio,
+        fecha_fin: fecha_fin
+      });
       return theTurno;
       
     } catch (error) {
@@ -63,10 +73,13 @@ export default class TurnosController {
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
 
+    const fecha_inicio = payload.fecha_inicio.toJSDate();
+      const fecha_fin = payload.fecha_fin.toJSDate();
+
     // Obtener el Turno y actualizar los datos
     const theTurno = await Turno.findOrFail(params.id);
-    theTurno.fecha_inicio= payload.fecha_inicio;
-    theTurno.fecha_fin = payload.fecha_fin;
+    theTurno.fecha_inicio= fecha_inicio;
+    theTurno.fecha_fin = fecha_fin;
     theTurno.conductor_id= payload.conductor_id;
     
 

@@ -34,6 +34,10 @@ export default class OperacionesController {
   public async create({ request, response }: HttpContextContract) {
     try {
       // Validar datos usando el OperacionValidator
+      console.log("vamoooooooooooooooos");
+      
+      console.log(request);
+      
       const payload = await request.validate(OperacionValidator);
 
       // Convertir fecha_nacimiento a Date
@@ -45,6 +49,8 @@ export default class OperacionesController {
         fecha_inicio: fecha_inicio,
         fecha_fin: fecha_fin
       });
+      console.log(theOperacion);
+      
       return theOperacion;
       
     } catch (error) {

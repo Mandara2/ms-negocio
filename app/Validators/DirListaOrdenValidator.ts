@@ -10,10 +10,10 @@ export default class DirListaOrdenValidator {
       allow: ['space', 'underscore', 'dash']
     })]),
     ruta_id: schema.number([
-      rules.exists({ table: 'contratos', column: 'id' }), rules.required() 
+      rules.exists({ table: 'rutas', column: 'id' }), rules.required() 
     ]),
     direccion_id: schema.number([
-      rules.exists({ table: 'contratos', column: 'id' }), rules.required() 
+      rules.exists({ table: 'direcciones', column: 'id' }), rules.required() 
     ])
   })
 

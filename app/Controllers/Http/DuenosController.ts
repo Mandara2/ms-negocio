@@ -6,7 +6,7 @@ import { Exception } from '@adonisjs/core/build/standalone';
 import DuenoValidator from 'App/Validators/DuenoValidator';
 
 export default class DuenosController { //se encarga de hacer las operaciones de CRUD
-    public async find({ request, params }: HttpContextContract) {
+    public async find({ request, params, response }: HttpContextContract) {
         let theDueno;
     
         try {
@@ -21,11 +21,11 @@ export default class DuenosController { //se encarga de hacer las operaciones de
     
             // Verificar si userResponse.data es null o está vacío
             if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-              throw new Exception('No se encontró información de usuario en el microservicio', 404);
+              return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
             }
     
             // Combinar la respuesta con los datos del cliente
-            return { cliente: theDueno, usuario: userResponse.data };
+            return {theDueno, usuario: userResponse.data };
           } else {
             const data = request.all();
             if ("page" in data && "per_page" in data) {
@@ -41,7 +41,7 @@ export default class DuenosController { //se encarga de hacer las operaciones de
           throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
         }
       }
-    public async create({ request }: HttpContextContract) { 
+    public async create({ request,response }: HttpContextContract) { 
         const body = request.body();
         const payload = await request.validate(DuenoValidator);
 
@@ -49,7 +49,7 @@ export default class DuenosController { //se encarga de hacer las operaciones de
             headers: { Authorization: request.headers().authorization || '' }
           });
           if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-            throw new Error('No se encontró información de usuario, verifique que el codigo sea correcto');
+            return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
           }
         
           const fecha_nacimiento_date = payload.fecha_nacimiento.toJSDate();
@@ -57,6 +57,7 @@ export default class DuenosController { //se encarga de hacer las operaciones de
       const theDueno = await Dueno.create({
         ...payload,
         fecha_nacimiento: fecha_nacimiento_date,
+        usuario_id: body.usuario_id
         });
 
         return theDueno;
@@ -79,7 +80,7 @@ export default class DuenosController { //se encarga de hacer las operaciones de
   
         // Verificar si no se encontró el usuario
         if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-          throw new Exception('No se encontró información de usuario, verifique que el código sea correcto', 404);
+          return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
         }
   
         const fechaNacimientoDate = payload.fecha_nacimiento.toJSDate();

@@ -8,7 +8,7 @@ export default class extends BaseSchema {
       table.increments("id");
       table.string("nombre").notNullable();
       table.date("fecha_vencimiento").notNullable();
-      table.integer("cliente_id").unsigned().references("clientes.id").notNullable();
+      table.integer("cliente_id").unsigned().references("clientes.id").notNullable().onDelete('CASCADE')
       table.integer('lote_id').unsigned().references('lotes.id')
       table.timestamp("created_at", { useTz: true });
       table.timestamp("updated_at", { useTz: true });

@@ -4,7 +4,7 @@ import Contrato from './Contrato'
 
 export default class Cuota extends BaseModel {
 
-  public static table = 'coutas';
+  public static table = 'cuotas';
 
   @column({ isPrimary: true })
   public id: number

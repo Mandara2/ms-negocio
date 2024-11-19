@@ -16,7 +16,7 @@ export default class DuenoValidator {
         rules.required() // Hace que el campo sea obligatorio
       ]),
     conductor_id: schema.number([
-      rules.exists({ table: 'conductors', column: 'id' })
+      rules.exists({ table: 'conductores', column: 'id' })
     ])
   })
 

@@ -10,7 +10,7 @@ export default class extends BaseSchema {
       table.date('fecha_inicio').notNullable()
       table.date('fecha_fin').notNullable()
       table.string('compania_aseguradora').notNullable()
-      table.integer('vehiculo_id').unsigned().references('vehiculos.id').notNullable()
+      table.integer('vehiculo_id').unsigned().references('vehiculos.id').notNullable().onDelete('CASCADE')
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

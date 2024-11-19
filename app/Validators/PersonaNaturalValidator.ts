@@ -17,6 +17,9 @@ export default class PersonaNaturalValidator {
       format: 'yyyy-MM-dd'
     }, [
       rules.required() // Hace que el campo sea obligatorio
+    ]),
+    empresa_id: schema.number([
+      rules.exists({ table: 'empresas', column: 'id' })
     ])
   })
 
