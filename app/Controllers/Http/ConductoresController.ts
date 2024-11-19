@@ -56,7 +56,7 @@ export default class ConductoresController {
 
       // Verificar si no se encontró el usuario
       if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-        throw new Exception('No se encontró información de usuario, verifique que el código sea correcto', 404);
+        return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
       }
 
   
@@ -101,7 +101,7 @@ export default class ConductoresController {
 
       // Verificar si no se encontró el usuario
       if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-        throw new Exception('No se encontró información de usuario, verifique que el código sea correcto', 404);
+        return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
       }
 
       const fechaNacimientoDate = payload.fecha_nacimiento.toJSDate();

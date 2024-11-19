@@ -88,4 +88,35 @@ export default class RutasController {
     response.status(204);
     return await theRuta.delete();
   }
+
+  // Método para encontrar rutas por contrato_id
+public async findRutaByContratoId({ params, response }: HttpContextContract) {
+  try {
+    const { contrato_id } = params;
+
+    // Verifica que el contrato_id exista
+    if (!contrato_id) {
+      return response.badRequest({ error: 'El parámetro contrato_id es obligatorio.' });
+    }
+
+    // Busca las rutas asociadas al contrato_id, con optimización en la consulta
+    const rutas = await Ruta.query().where('contrato_id', contrato_id).preload('contrato').preload('vehiculoConductor');
+    
+    // Verifica si hay resultados
+    if (rutas.length === 0) {
+      return response.notFound({ message: `No se encontraron rutas con contrato_id: ${contrato_id}` });
+    }
+
+    // Retorna las rutas encontradas
+    return rutas;
+  } catch (error) {
+    // Manejo de excepciones mejorado
+    throw new Exception(
+      error.message || 'Error al buscar rutas por contrato_id',
+      error.status || 500
+    );
+  }
+}
+
+
 }

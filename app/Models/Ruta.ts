@@ -52,6 +52,8 @@ export default class Ruta extends BaseModel {
   })
   public dirListaOrden: HasMany<typeof DirListaOrden>
 
+  
+
   /* @hasMany(() => Lote, {
     foreignKey: 'ruta_id'
   })

@@ -31,6 +31,13 @@ export default class Municipio extends BaseModel {
   })
   public departamento: BelongsTo<typeof Departamento>
 
+  @hasMany(() => Operacion, {
+    foreignKey: 'municipio_id'
+  })
+  public operacion: HasMany<typeof Operacion>
+    
+  
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
