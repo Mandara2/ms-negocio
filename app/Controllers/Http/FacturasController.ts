@@ -4,24 +4,27 @@ import Factura from "App/Models/Factura";
 import FacturaValidator from "App/Validators/FacturaValidator";
 
 export default class FacturasController {
-
   // Método para verificar si una factura existe
   public async checkFacturaExists({ params, response }: HttpContextContract) {
     try {
-      const facturaId = params.id;  // Obtiene el ID de la factura desde los parámetros de la URL
+      const facturaId = params.id; // Obtiene el ID de la factura desde los parámetros de la URL
 
       // Verificar si la factura existe
       const factura = await Factura.find(facturaId);
 
       if (!factura) {
         // Si no existe, devolver un error 404
-        return response.status(404).json({ error: 'Factura no encontrada' });
+        return response.status(404).json({ error: "Factura no encontrada" });
       }
 
       // Si la factura existe, devolver una respuesta positiva
-      return response.status(200).json({ success: true, message: 'Factura encontrada' });
+      return response
+        .status(200)
+        .json({ success: true, message: "Factura encontrada" });
     } catch (error) {
-      return response.status(500).json({ error: 'Error al verificar la factura' });
+      return response
+        .status(500)
+        .json({ error: "Error al verificar la factura" });
     }
   }
 
@@ -61,10 +64,8 @@ export default class FacturasController {
 
       const theFactura = await Factura.create({
         ...payload,
-        fecha_hora: fecha_hora
+        fecha_hora: fecha_hora,
       });
-
-
 
       return theFactura;
     } catch (error) {
@@ -93,6 +94,8 @@ export default class FacturasController {
       const fecha_hora = payload.fecha_hora.toJSDate();
       theFactura.fecha_hora = fecha_hora;
       theFactura.monto = payload.monto;
+      theFactura.estado = payload.estado;
+      theFactura.detalles = payload.detalles;
       theFactura.cuota_id = payload.cuota_id;
       theFactura.gastos_id = payload.cuota_id;
       return await theFactura.save();

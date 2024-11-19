@@ -4,8 +4,7 @@ import Gasto from "./Gasto";
 import Cuota from "./Cuota";
 
 export default class Factura extends BaseModel {
-
-  public static table = 'facturas';
+  public static table = "facturas";
 
   @column({ isPrimary: true })
   public id: number;
@@ -15,6 +14,12 @@ export default class Factura extends BaseModel {
 
   @column()
   public monto: number;
+
+  @column()
+  public estado: string;
+
+  @column()
+  public detalles: string;
 
   @column()
   public cuota_id: number;
