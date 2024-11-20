@@ -12,7 +12,7 @@ export default class OperacionesController {
     try {
       if (params.id) {
         theOperacion = await Operacion.findOrFail(params.id);
-        await theOperacion.load('municipios');
+        await theOperacion.load('municipio');
         await theOperacion.load('vehiculo');
         return theOperacion;
       } else {
@@ -34,12 +34,15 @@ export default class OperacionesController {
   public async create({ request, response }: HttpContextContract) {
     try {
       // Validar datos usando el OperacionValidator
-      console.log("vamoooooooooooooooos");
+      
       
       console.log(request.body());
+
+      console.log(request.all());
+
       
       const payload = await request.validate(OperacionValidator);
-
+      console.log("vamoooooooooooooooos");
       console.log(payload);
       
 
