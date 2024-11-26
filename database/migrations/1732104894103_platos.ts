@@ -1,15 +1,13 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'clientes'
+  protected tableName = 'platos'
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-
-      table.string('telefono').notNullable()
-      table.integer('cantidad_pedidos_realizados')
-
+      table.string('nombre').notNullable()
+      table.string('descripcion')
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

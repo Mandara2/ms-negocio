@@ -59,7 +59,6 @@ export default class ClientesController {
       // Crear el cliente si la validación y la verificación de usuario son exitosas
       const theCliente = await Clientes.create({
         ...payload,
-        usuario_id: body.usuario_id
       });
       return theCliente;
       

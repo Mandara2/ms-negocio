@@ -25,7 +25,7 @@ export default class Factura extends BaseModel {
   public cuota_id: number;
 
   @column()
-  public gastos_id: number;
+  public gastos_id: number | null;
 
   @belongsTo(() => Cuota, {
     foreignKey: "cuota_id",

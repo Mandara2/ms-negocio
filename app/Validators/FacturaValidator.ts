@@ -13,9 +13,9 @@ export default class FacturaValidator {
       rules.required() // Hace que el campo sea obligatorio
     ]),
     monto: schema.number([rules.unsigned(), rules.required()]),
-    gastos_id: schema.number([
+    /* gastos_id: schema.number([
       rules.exists({ table: 'gastos', column: 'id' })
-    ])
+    ]) */
   })
 
   

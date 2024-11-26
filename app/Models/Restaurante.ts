@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
-import { BaseModel, BelongsTo, belongsTo, column } from "@ioc:Adonis/Lucid/Orm";
+import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from "@ioc:Adonis/Lucid/Orm";
 import Servicio from "./Servicio";
+import PlatoRestaurante from "./PlatoRestaurante";
 
 export default class Restaurante extends BaseModel {
 
@@ -22,6 +23,11 @@ export default class Restaurante extends BaseModel {
     foreignKey: "servicio_id",
   })
   public servicio: BelongsTo<typeof Servicio>;
+
+  @hasMany(() => PlatoRestaurante, {
+    foreignKey: 'restaurante_id'
+  })
+  public platoRestaurante: HasMany<typeof PlatoRestaurante>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime;
