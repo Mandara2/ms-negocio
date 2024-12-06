@@ -5,4 +5,4 @@ Route.group(() => {
     Route.post("/turnos", "TurnosController.create");
     Route.put("/turnos/:id", "TurnosController.update");
     Route.delete("/turnos/:id", "TurnosController.delete");
-}).middleware(['security'])
+})//.middleware(['security'])

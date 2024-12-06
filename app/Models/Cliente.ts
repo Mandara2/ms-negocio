@@ -25,11 +25,6 @@ export default class Cliente extends BaseModel {
   @column()
   public cantidad_pedidos_realizados: number;
 
-  /*   @hasOne(() => Empresa, {
-    foreignKey: 'cliente_id'
-  })
-  public empresa: HasOne<typeof Empresa> */
-
   @hasOne(() => PersonaNatural, {
     foreignKey: "cliente_id",
   })

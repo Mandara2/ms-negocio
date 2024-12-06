@@ -2,31 +2,50 @@ import { Exception } from "@adonisjs/core/build/standalone";
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Producto from "App/Models/Producto";
 import ProductoValidator from "App/Validators/ProductoValidator";
+import { DateTime } from "luxon";
 
 export default class ProductosController {
   // Método para encontrar Productos
   public async find({ request, params }: HttpContextContract) {
     try {
       if (params.id) {
-        let theProducto: Producto = await Producto.findOrFail(params.id);
-        await theProducto.load("cliente");
-        await theProducto.load("lote");
-        return theProducto;
+        const theProducto = await Producto.findOrFail(params.id);
+        await theProducto.load('cliente');
+        await theProducto.load('lote');
+
+        // Formatear fechas antes de devolver
+        return {
+          ...theProducto.toJSON(),
+          fecha_vencimiento: DateTime.fromJSDate(theProducto.fecha_vencimiento).toFormat('yyyy-MM-dd'),
+        };
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
-          const page = request.input("page", 1);
+          const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Producto.query().paginate(page, perPage); // Devuelve una fracción de todas las Productos
+
+          // Obtener datos paginados
+          const paginatedProductos = await Producto.query().paginate(page, perPage);
+
+          // Formatear fechas después de obtener los datos
+          const formattedProductos = paginatedProductos.toJSON();
+          formattedProductos.data = formattedProductos.data.map(Producto => ({
+            ...Producto,
+            fecha_vencimiento: DateTime.fromJSDate(new Date(Producto.fecha_vencimiento)).toFormat('yyyy-MM-dd'),
+          }));
+
+          return formattedProductos;
         } else {
-          return await Producto.query(); // Devuelve todas las Productos si no se especifica el ID
+          // Consultar todos los Productos y formatear fechas
+          const Productos = await Producto.query();
+          return Productos.map(Producto => ({
+            ...Producto.toJSON(),
+            fecha_vencimiento: DateTime.fromJSDate(new Date(Producto.fecha_vencimiento)).toFormat('yyyy-MM-dd'),
+          }));
         }
       }
     } catch (error) {
-      throw new Exception(
-        error.message || "Error al procesar la solicitud",
-        error.status || 500
-      );
+      throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
   }
 

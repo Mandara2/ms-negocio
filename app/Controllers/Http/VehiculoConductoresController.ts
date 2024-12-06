@@ -2,28 +2,49 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import VehiculoConductor from 'App/Models/VehiculoConductor';
 import { Exception } from '@adonisjs/core/build/standalone';
 import VehiculoConductorValidator from 'App/Validators/VehiculoConductorValidator'; // Importar el validador
+import { DateTime } from 'luxon';
 
 export default class VehiculoConductoresController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theVehiculoConductor;
-    
-
     try {
       if (params.id) {
-        // CARGAR LO QUE SE
-        theVehiculoConductor = await VehiculoConductor.findOrFail(params.id);
-        await theVehiculoConductor.load('vehiculo');
+        const theVehiculoConductor = await VehiculoConductor.findOrFail(params.id);
         await theVehiculoConductor.load('conductor');
-        return theVehiculoConductor;
+        await theVehiculoConductor.load('vehiculo')
+
+        // Formatear fechas antes de devolver
+        return {
+          ...theVehiculoConductor.toJSON(),
+          fecha_inicio: DateTime.fromJSDate(theVehiculoConductor.fecha_inicio).toFormat('yyyy-MM-dd'),
+          fecha_fin: DateTime.fromJSDate(theVehiculoConductor.fecha_fin).toFormat('yyyy-MM-dd'),
+        };
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await VehiculoConductor.query().paginate(page, perPage);
+
+          // Obtener datos paginados
+          const paginatedVehiculoConductors = await VehiculoConductor.query().paginate(page, perPage);
+
+          // Formatear fechas después de obtener los datos
+          const formattedVehiculoConductors = paginatedVehiculoConductors.toJSON();
+          formattedVehiculoConductors.data = formattedVehiculoConductors.data.map(VehiculoConductor => ({
+            ...VehiculoConductor,
+            fecha_inicio: DateTime.fromJSDate(new Date(VehiculoConductor.fecha_inicio)).toFormat('yyyy-MM-dd'),
+            fecha_fin: DateTime.fromJSDate(new Date(VehiculoConductor.fecha_fin)).toFormat('yyyy-MM-dd'),
+          }));
+
+          return formattedVehiculoConductors;
         } else {
-          return await VehiculoConductor.query();
+          // Consultar todos los VehiculoConductors y formatear fechas
+          const VehiculoConductors = await VehiculoConductor.query();
+          return VehiculoConductors.map(VehiculoConductor => ({
+            ...VehiculoConductor.toJSON(),
+            fecha_inicio: DateTime.fromJSDate(new Date(VehiculoConductor.fecha_inicio)).toFormat('yyyy-MM-dd'),
+            fecha_fin: DateTime.fromJSDate(new Date(VehiculoConductor.fecha_fin)).toFormat('yyyy-MM-dd'),
+          }));
         }
       }
     } catch (error) {
