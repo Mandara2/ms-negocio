@@ -4,27 +4,47 @@ import { Exception } from '@adonisjs/core/build/standalone';
 import ContratoValidator from 'App/Validators/ContratoValidator'; // Importar el validador
 import axios from 'axios';
 import Env from '@ioc:Adonis/Core/Env';
-import Cliente from 'App/Models/Cliente';
 import Ruta from 'App/Models/Ruta';
+import { DateTime } from 'luxon';
+import PersonaNatural from 'App/Models/PersonaNatural';
 
 export default class ContratosController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theContrato;
-
     try {
       if (params.id) {
-        theContrato = await Contrato.findOrFail(params.id);
+        const theContrato = await Contrato.findOrFail(params.id);
         await theContrato.load('cliente');
-        return theContrato;
+
+        // Formatear fechas antes de devolver
+        return {
+          ...theContrato.toJSON(),
+          fecha: DateTime.fromJSDate(theContrato.fecha).toFormat('yyyy-MM-dd'),
+        };
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Contrato.query().paginate(page, perPage);
+
+          // Obtener datos paginados
+          const paginatedContratos = await Contrato.query().paginate(page, perPage);
+
+          // Formatear fechas después de obtener los datos
+          const formattedContratos = paginatedContratos.toJSON();
+          formattedContratos.data = formattedContratos.data.map(Contrato => ({
+            ...Contrato,
+            fecha: DateTime.fromJSDate(new Date(Contrato.fecha)).toFormat('yyyy-MM-dd'),
+          }));
+
+          return formattedContratos;
         } else {
-          return await Contrato.query();
+          // Consultar todos los Contratos y formatear fechas
+          const Contratos = await Contrato.query();
+          return Contratos.map(Contrato => ({
+            ...Contrato.toJSON(),
+            fecha: DateTime.fromJSDate(new Date(Contrato.fecha)).toFormat('yyyy-MM-dd'),
+          }));
         }
       }
     } catch (error) {
@@ -41,13 +61,13 @@ export default class ContratosController {
       console.log(payload.cliente_id);
       
       // Buscar cliente relacionado
-      const cliente = await Cliente.find(payload.cliente_id);
-      if (!cliente) {
+      const personaNatural = await PersonaNatural.find(payload.cliente_id);
+      if (!personaNatural) {
         throw new Exception("No se pudo encontrar al cliente");
       }
       
       // Obtener el usuario asociado al cliente
-      const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${cliente.usuario_id}`, {
+      const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${personaNatural.usuario_id}`, {
         headers: { Authorization: request.headers().authorization || '' }
       });
 

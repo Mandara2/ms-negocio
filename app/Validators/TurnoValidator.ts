@@ -1,5 +1,6 @@
 import { schema, CustomMessages, rules } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { DateTime } from 'luxon';
 
 export default class TurnoValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -30,5 +31,12 @@ export default class TurnoValidator {
     'fecha_fin.required': 'El campo fecha fin es obligatorio',
     'conductor_id.exists': 'El conductor debe existir en la base de datos',
     'conductor_id.required': 'El campo conductor id id es obligatorio'
+  }
+
+  public formatDates(data: { fecha_inicio: DateTime; fecha_fin: DateTime }) {
+    return {
+      fecha_inicio: data.fecha_inicio.toFormat('yyyy-MM-dd'),
+      fecha_fin: data.fecha_fin.toFormat('yyyy-MM-dd'),
+    };
   }
 }

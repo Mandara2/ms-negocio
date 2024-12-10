@@ -4,37 +4,45 @@ import axios from 'axios';
 import Env from '@ioc:Adonis/Core/Env';
 import { Exception } from '@adonisjs/core/build/standalone';
 import PersonaNaturalValidator from 'App/Validators/PersonaNaturalValidator'; // Importar el validador
+import { DateTime } from 'luxon';
 
 export default class PersonasNaturalesController {
   // Método para encontrar personas naturales
-  public async find({ request, params, response}: HttpContextContract) {
-    let thePersonaNatural;
-
+  public async find({ request, params }: HttpContextContract) {
     try {
       if (params.id) {
-        // Buscar persona natural por ID
-        thePersonaNatural = await PersonaNatural.findOrFail(params.id);
-        //await thePersonaNatural.load('cliente');
-        await thePersonaNatural.load('empresas')
+        const thePersonaNatural = await PersonaNatural.findOrFail(params.id);
+        await thePersonaNatural.load('empresas');
 
-        // Llamada al microservicio de usuarios
-        const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${thePersonaNatural.usuario_id}`, {
-          headers: { Authorization: request.headers().authorization || '' }
-        });
-
-        if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-          return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
-        }
-
-        return {thePersonaNatural, usuario: userResponse.data };
+        // Formatear fechas antes de devolver
+        return {
+          ...thePersonaNatural.toJSON(),
+          fecha_nacimiento: DateTime.fromJSDate(thePersonaNatural.fecha_nacimiento).toFormat('yyyy-MM-dd'),
+        };
       } else {
         const data = request.all();
-        if ('page' in data && 'per_page' in data) {
+        if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
-          const perPage = request.input('per_page', 20);
-          return await PersonaNatural.query().paginate(page, perPage);
+          const perPage = request.input("per_page", 20);
+
+          // Obtener datos paginados
+          const paginatedPersonaNaturals = await PersonaNatural.query().paginate(page, perPage);
+
+          // Formatear fechas después de obtener los datos
+          const formattedPersonaNaturals = paginatedPersonaNaturals.toJSON();
+          formattedPersonaNaturals.data = formattedPersonaNaturals.data.map(PersonaNatural => ({
+            ...PersonaNatural,
+            fecha_nacimiento: DateTime.fromJSDate(new Date(PersonaNatural.fecha_nacimiento)).toFormat('yyyy-MM-dd'),
+          }));
+
+          return formattedPersonaNaturals;
         } else {
-          return await PersonaNatural.query();
+          // Consultar todos los PersonaNaturals y formatear fechas
+          const PersonaNaturals = await PersonaNatural.query();
+          return PersonaNaturals.map(PersonaNatural => ({
+            ...PersonaNatural.toJSON(),
+            fecha_nacimiento: DateTime.fromJSDate(new Date(PersonaNatural.fecha_nacimiento)).toFormat('yyyy-MM-dd'),
+          }));
         }
       }
     } catch (error) {

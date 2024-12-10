@@ -2,27 +2,49 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Operacion from 'App/Models/Operacion';
 import { Exception } from '@adonisjs/core/build/standalone';
 import OperacionValidator from 'App/Validators/OperacionValidator'; // Importar el validador
+import { DateTime } from 'luxon';
 
 export default class OperacionesController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theOperacion;
-    
-
     try {
       if (params.id) {
-        theOperacion = await Operacion.findOrFail(params.id);
+        const theOperacion = await Operacion.findOrFail(params.id);
         await theOperacion.load('municipio');
         await theOperacion.load('vehiculo');
-        return theOperacion;
+
+        // Formatear fechas antes de devolver
+        return {
+          ...theOperacion.toJSON(),
+          fecha_inicio: DateTime.fromJSDate(theOperacion.fecha_inicio).toFormat('yyyy-MM-dd'),
+          fecha_fin: DateTime.fromJSDate(theOperacion.fecha_fin).toFormat('yyyy-MM-dd'),
+        };
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Operacion.query().paginate(page, perPage);
+
+          // Obtener datos paginados
+          const paginatedOperacions = await Operacion.query().paginate(page, perPage);
+
+          // Formatear fechas después de obtener los datos
+          const formattedOperacions = paginatedOperacions.toJSON();
+          formattedOperacions.data = formattedOperacions.data.map(Operacion => ({
+            ...Operacion,
+            fecha_inicio: DateTime.fromJSDate(new Date(Operacion.fecha_inicio)).toFormat('yyyy-MM-dd'),
+            fecha_fin: DateTime.fromJSDate(new Date(Operacion.fecha_fin)).toFormat('yyyy-MM-dd'),
+          }));
+
+          return formattedOperacions;
         } else {
-          return await Operacion.query();
+          // Consultar todos los Operacions y formatear fechas
+          const Operacions = await Operacion.query();
+          return Operacions.map(Operacion => ({
+            ...Operacion.toJSON(),
+            fecha_inicio: DateTime.fromJSDate(new Date(Operacion.fecha_inicio)).toFormat('yyyy-MM-dd'),
+            fecha_fin: DateTime.fromJSDate(new Date(Operacion.fecha_fin)).toFormat('yyyy-MM-dd'),
+          }));
         }
       }
     } catch (error) {

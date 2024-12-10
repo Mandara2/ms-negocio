@@ -4,40 +4,51 @@ import axios from 'axios';
 import Env from '@ioc:Adonis/Core/Env';
 import { Exception } from '@adonisjs/core/build/standalone';
 import ConductorValidator from 'App/Validators/ConductorValidator'; // Importar el validador
+import { DateTime } from 'luxon';
+import Conductor from 'App/Models/Conductor';
 
 export default class ConductoresController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theConductor;
-
     try {
       if (params.id) {
-        theConductor = await Conductores.findOrFail(params.id);
+        const theConductor = await Conductor.findOrFail(params.id);
 
-        // Llamada al microservicio de usuarios
-        const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${theConductor.usuario_id}`, {
-          headers: { Authorization: request.headers().authorization || '' }
-        });
-
-        // Verificar si userResponse.data es null o está vacío
-        if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-          throw new Exception('No se encontró información de usuario en el microservicio', 404);
-        }
-
-        // Combinar la respuesta con los datos del conductor
-        return { conductor: theConductor, usuario: userResponse.data };
+        // Formatear fechas antes de devolver
+        return {
+          ...theConductor.toJSON(),
+          fecha_inicio: DateTime.fromJSDate(theConductor.fecha_vencimiento_licencia).toFormat('yyyy-MM-dd'),
+          fecha_fin: DateTime.fromJSDate(theConductor.fecha_nacimiento).toFormat('yyyy-MM-dd'),
+        };
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Conductores.query().paginate(page, perPage);
+
+          // Obtener datos paginados
+          const paginatedConductors = await Conductor.query().paginate(page, perPage);
+
+          // Formatear fechas después de obtener los datos
+          const formattedConductors = paginatedConductors.toJSON();
+          formattedConductors.data = formattedConductors.data.map(Conductor => ({
+            ...Conductor,
+            fecha_vencimiento_licencia: DateTime.fromJSDate(new Date(Conductor.fecha_inicio)).toFormat('yyyy-MM-dd'),
+            fecha_nacimiento: DateTime.fromJSDate(new Date(Conductor.fecha_fin)).toFormat('yyyy-MM-dd'),
+          }));
+
+          return formattedConductors;
         } else {
-          return await Conductores.query();
+          // Consultar todos los Conductors y formatear fechas
+          const Conductors = await Conductor.query();
+          return Conductors.map(Conductor => ({
+            ...Conductor.toJSON(),
+            fecha_vencimiento_licencia: DateTime.fromJSDate(new Date(Conductor.fecha_vencimiento_licencia)).toFormat('yyyy-MM-dd'),
+            fecha_nacimiento: DateTime.fromJSDate(new Date(Conductor.fecha_nacimiento)).toFormat('yyyy-MM-dd'),
+          }));
         }
       }
     } catch (error) {
-      // Si hay un error, lanzar una excepción con un mensaje y código de estado
       throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
   }

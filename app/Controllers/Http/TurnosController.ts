@@ -2,26 +2,48 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Turno from 'App/Models/Turno';
 import { Exception } from '@adonisjs/core/build/standalone';
 import TurnoValidator from 'App/Validators/TurnoValidator'; // Importar el validador
+import { DateTime } from 'luxon';
 
 export default class TurnosController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theTurno;
-    
-
     try {
       if (params.id) {
-        theTurno = await Turno.findOrFail(params.id);
+        const theTurno = await Turno.findOrFail(params.id);
         await theTurno.load('conductor');
-        return theTurno;
+
+        // Formatear fechas antes de devolver
+        return {
+          ...theTurno.toJSON(),
+          fecha_inicio: DateTime.fromJSDate(theTurno.fecha_inicio).toFormat('yyyy-MM-dd'),
+          fecha_fin: DateTime.fromJSDate(theTurno.fecha_fin).toFormat('yyyy-MM-dd'),
+        };
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Turno.query().paginate(page, perPage);
+
+          // Obtener datos paginados
+          const paginatedTurnos = await Turno.query().paginate(page, perPage);
+
+          // Formatear fechas después de obtener los datos
+          const formattedTurnos = paginatedTurnos.toJSON();
+          formattedTurnos.data = formattedTurnos.data.map(turno => ({
+            ...turno,
+            fecha_inicio: DateTime.fromJSDate(new Date(turno.fecha_inicio)).toFormat('yyyy-MM-dd'),
+            fecha_fin: DateTime.fromJSDate(new Date(turno.fecha_fin)).toFormat('yyyy-MM-dd'),
+          }));
+
+          return formattedTurnos;
         } else {
-          return await Turno.query();
+          // Consultar todos los turnos y formatear fechas
+          const turnos = await Turno.query();
+          return turnos.map(turno => ({
+            ...turno.toJSON(),
+            fecha_inicio: DateTime.fromJSDate(new Date(turno.fecha_inicio)).toFormat('yyyy-MM-dd'),
+            fecha_fin: DateTime.fromJSDate(new Date(turno.fecha_fin)).toFormat('yyyy-MM-dd'),
+          }));
         }
       }
     } catch (error) {

@@ -4,43 +4,72 @@ import axios from 'axios';
 import Env from '@ioc:Adonis/Core/Env';
 import { Exception } from '@adonisjs/core/build/standalone';
 import DuenoValidator from 'App/Validators/DuenoValidator';
+import { DateTime } from 'luxon';
 
 export default class DuenosController { //se encarga de hacer las operaciones de CRUD
-    public async find({ request, params, response }: HttpContextContract) {
-        let theDueno;
-    
-        try {
-          if (params.id) {
-            theDueno = await Dueno.findOrFail(params.id);
-            
-    
-            // Llamada al microservicio de usuarios
-            const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${theDueno.usuario_id}`, {
-              headers: { Authorization: request.headers().authorization || '' }
-            });
-    
-            // Verificar si userResponse.data es null o está vacío
-            if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-              return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
-            }
-    
-            // Combinar la respuesta con los datos del cliente
-            return {theDueno, usuario: userResponse.data };
-          } else {
-            const data = request.all();
-            if ("page" in data && "per_page" in data) {
-              const page = request.input('page', 1);
-              const perPage = request.input("per_page", 20);
-              return await Dueno.query().paginate(page, perPage);
-            } else {
-              return await Dueno.query();
-            }
+  public async find({ request, params, response }: HttpContextContract) {
+    try {
+      if (params.id) {
+        const theDueno = await Dueno.findOrFail(params.id);
+
+        // Formatear la fecha de nacimiento sin alterar el modelo original
+        const formattedDueno = {
+          ...theDueno.toJSON(),
+          fecha_nacimiento: DateTime.fromJSDate(new Date(theDueno.fecha_nacimiento)).toFormat('yyyy-MM-dd'),
+        };
+
+        // Llamada al microservicio de usuarios
+        const userResponse = await axios.get(
+          `${Env.get('MS_SECURITY')}/api/users/${theDueno.usuario_id}`,
+          {
+            headers: { Authorization: request.headers().authorization || '' },
           }
-        } catch (error) {
-          // Si hay un error, lanzar una excepción con un mensaje y código de estado
-          throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
+        );
+
+        // Verificar si userResponse.data es null o está vacío
+        if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
+          return response.notFound({
+            error: 'No se encontró información de usuario, verifique que el código sea correcto',
+          });
+        }
+
+        // Combinar la respuesta con los datos del cliente
+        return { theDueno: formattedDueno, usuario: userResponse.data };
+      } else {
+        const data = request.all();
+        if ('page' in data && 'per_page' in data) {
+          const page = request.input('page', 1);
+          const perPage = request.input('per_page', 20);
+
+          // Obtener datos paginados
+          const paginatedDuenos = await Dueno.query().paginate(page, perPage);
+
+          // Formatear las fechas de nacimiento en los resultados paginados
+          const formattedDuenos = paginatedDuenos.toJSON();
+          formattedDuenos.data = formattedDuenos.data.map((dueno) => ({
+            ...dueno,
+            fecha_nacimiento: DateTime.fromJSDate(new Date(dueno.fecha_nacimiento)).toFormat('yyyy-MM-dd'),
+          }));
+
+          return formattedDuenos;
+        } else {
+          // Consultar todos los dueños y formatear las fechas de nacimiento
+          const duenos = await Dueno.query();
+          return duenos.map((dueno) => ({
+            ...dueno.toJSON(),
+            fecha_nacimiento: DateTime.fromJSDate(new Date(dueno.fecha_nacimiento)).toFormat('yyyy-MM-dd'),
+          }));
         }
       }
+    } catch (error) {
+      // Si hay un error, lanzar una excepción con un mensaje y código de estado
+      throw new Exception(
+        error.message || 'Error al procesar la solicitud',
+        error.status || 500
+      );
+    }
+  }
+
     public async create({ request,response }: HttpContextContract) { 
         const body = request.body();
         const payload = await request.validate(DuenoValidator);

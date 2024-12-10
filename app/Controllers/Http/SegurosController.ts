@@ -2,32 +2,54 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Seguro from 'App/Models/Seguro';
 import { Exception } from '@adonisjs/core/build/standalone';
 import SeguroValidator from 'App/Validators/SeguroValidator'; // Importar el validador
+import { DateTime } from 'luxon';
 
 export default class SegurosController {
-  // Método de búsqueda
-  public async find({ request, params }: HttpContextContract) {
-    let theSeguro;
-    
-
-    try {
-      if (params.id) {
-        theSeguro = await Seguro.findOrFail(params.id);
-        await theSeguro.load('vehiculo');
-        return theSeguro;
-      } else {
-        const data = request.all();
-        if ("page" in data && "per_page" in data) {
-          const page = request.input('page', 1);
-          const perPage = request.input("per_page", 20);
-          return await Seguro.query().paginate(page, perPage);
+    // Método de búsqueda
+    public async find({ request, params }: HttpContextContract) {
+      try {
+        if (params.id) {
+          const theSeguro = await Seguro.findOrFail(params.id);
+          await theSeguro.load('vehiculo');
+  
+          // Formatear fechas antes de devolver
+          return {
+            ...theSeguro.toJSON(),
+            fecha_inicio: DateTime.fromJSDate(theSeguro.fecha_inicio).toFormat('yyyy-MM-dd'),
+            fecha_fin: DateTime.fromJSDate(theSeguro.fecha_fin).toFormat('yyyy-MM-dd'),
+          };
         } else {
-          return await Seguro.query();
+          const data = request.all();
+          if ("page" in data && "per_page" in data) {
+            const page = request.input('page', 1);
+            const perPage = request.input("per_page", 20);
+  
+            // Obtener datos paginados
+            const paginatedSeguros = await Seguro.query().paginate(page, perPage);
+  
+            // Formatear fechas después de obtener los datos
+            const formattedSeguros = paginatedSeguros.toJSON();
+            formattedSeguros.data = formattedSeguros.data.map(Seguro => ({
+              ...Seguro,
+              fecha_inicio: DateTime.fromJSDate(new Date(Seguro.fecha_inicio)).toFormat('yyyy-MM-dd'),
+              fecha_fin: DateTime.fromJSDate(new Date(Seguro.fecha_fin)).toFormat('yyyy-MM-dd'),
+            }));
+  
+            return formattedSeguros;
+          } else {
+            // Consultar todos los Seguros y formatear fechas
+            const Seguros = await Seguro.query();
+            return Seguros.map(Seguro => ({
+              ...Seguro.toJSON(),
+              fecha_inicio: DateTime.fromJSDate(new Date(Seguro.fecha_inicio)).toFormat('yyyy-MM-dd'),
+              fecha_fin: DateTime.fromJSDate(new Date(Seguro.fecha_fin)).toFormat('yyyy-MM-dd'),
+            }));
+          }
         }
+      } catch (error) {
+        throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
       }
-    } catch (error) {
-      throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
-  }
 
   // Método para crear un Seguro
   public async create({ request, response }: HttpContextContract) {

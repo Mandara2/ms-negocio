@@ -5,4 +5,4 @@ Route.group(() => {
     Route.post("/categoriasProductos", "CategoriaProductosController.create");
     Route.put("/categoriasProductos/:id", "CategoriaProductosController.update");
     Route.delete("/categoriasProductos/:id", "CategoriaProductosController.delete");
-}).middleware(['security'])
+})//.middleware(['security'])

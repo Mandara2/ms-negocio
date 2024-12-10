@@ -2,27 +2,45 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import DuenoVehiculo from 'App/Models/DuenoVehiculo';
 import { Exception } from '@adonisjs/core/build/standalone';
 import DuenoVehiculoValidator from 'App/Validators/DuenoVehiculoValidator'; // Importar el validador
+import { DateTime } from 'luxon';
 
 export default class DuenoVehiculoController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theDuenoVehiculo;
-    
-
     try {
       if (params.id) {
-        theDuenoVehiculo = await DuenoVehiculo.findOrFail(params.id);
-        await theDuenoVehiculo.load('dueno');
-        await theDuenoVehiculo.load('vehiculo');
-        return theDuenoVehiculo;
+        const theDuenoVehiculo = await DuenoVehiculo.findOrFail(params.id);
+
+
+        // Formatear fechas antes de devolver
+        return {
+          ...theDuenoVehiculo.toJSON(),
+          fecha_adquisicion: DateTime.fromJSDate(theDuenoVehiculo.fecha_adquisicion).toFormat('yyyy-MM-dd'),
+        };
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await DuenoVehiculo.query().paginate(page, perPage);
+
+          // Obtener datos paginados
+          const paginatedDuenoVehiculos = await DuenoVehiculo.query().paginate(page, perPage);
+
+          // Formatear fechas después de obtener los datos
+          const formattedDuenoVehiculos = paginatedDuenoVehiculos.toJSON();
+          formattedDuenoVehiculos.data = formattedDuenoVehiculos.data.map(DuenoVehiculo => ({
+            ...DuenoVehiculo,
+            fecha_adquisicion: DateTime.fromJSDate(new Date(DuenoVehiculo.fecha_adquisicion)).toFormat('yyyy-MM-dd'),
+          }));
+
+          return formattedDuenoVehiculos;
         } else {
-          return await DuenoVehiculo.query();
+          // Consultar todos los DuenoVehiculos y formatear fechas
+          const DuenoVehiculos = await DuenoVehiculo.query();
+          return DuenoVehiculos.map(DuenoVehiculo => ({
+            ...DuenoVehiculo.toJSON(),
+            fecha_adquisicion: DateTime.fromJSDate(new Date(DuenoVehiculo.fecha_adquisicion)).toFormat('yyyy-MM-dd'),
+          }));
         }
       }
     } catch (error) {

@@ -3,30 +3,49 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Servicio from "App/Models/Servicio";
 import { Exception } from "@adonisjs/core/build/standalone";
 import ServicioValidator from "App/Validators/ServicioValidator";
+import { DateTime } from "luxon";
 
 export default class ServiciosController {
   // Método para encontrar Servicios
   public async find({ request, params }: HttpContextContract) {
     try {
       if (params.id) {
-        let theServicio: Servicio = await Servicio.findOrFail(params.id);
-        await theServicio.load("administrador");
-        return theServicio;
+        const theServicio = await Servicio.findOrFail(params.id);
+        await theServicio.load('administrador');
+
+        // Formatear fechas antes de devolver
+        return {
+          ...theServicio.toJSON(),
+          fecha: DateTime.fromJSDate(theServicio.fecha).toFormat('yyyy-MM-dd'),
+        };
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
-          const page = request.input("page", 1);
+          const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Servicio.query().paginate(page, perPage); // Devuelve una fracción de todas las Servicios
+
+          // Obtener datos paginados
+          const paginatedServicios = await Servicio.query().paginate(page, perPage);
+
+          // Formatear fechas después de obtener los datos
+          const formattedServicios = paginatedServicios.toJSON();
+          formattedServicios.data = formattedServicios.data.map(Servicio => ({
+            ...Servicio,
+            fecha: DateTime.fromJSDate(new Date(Servicio.fecha)).toFormat('yyyy-MM-dd'),
+          }));
+
+          return formattedServicios;
         } else {
-          return await Servicio.query(); // Devuelve todas las Servicios si no se especifica el ID
+          // Consultar todos los Servicios y formatear fechas
+          const Servicios = await Servicio.query();
+          return Servicios.map(Servicio => ({
+            ...Servicio.toJSON(),
+            fecha: DateTime.fromJSDate(new Date(Servicio.fecha)).toFormat('yyyy-MM-dd'),
+          }));
         }
       }
     } catch (error) {
-      throw new Exception(
-        error.message || "Error al procesar la solicitud",
-        error.status || 500
-      );
+      throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
   }
 

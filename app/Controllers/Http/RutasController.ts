@@ -2,27 +2,46 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Ruta from 'App/Models/Ruta';
 import { Exception } from '@adonisjs/core/build/standalone';
 import RutaValidator from 'App/Validators/RutaValidator'; // Importar el validador
+import { DateTime } from 'luxon';
 
 export default class RutasController {
   // Método de búsqueda
   public async find({ request, params }: HttpContextContract) {
-    let theRuta;
-    
-
     try {
       if (params.id) {
-        theRuta = await Ruta.findOrFail(params.id);
+        const theRuta = await Ruta.findOrFail(params.id);
         await theRuta.load('contrato');
         await theRuta.load('vehiculoConductor');
-        return theRuta;
+
+        // Formatear fechas antes de devolver
+        return {
+          ...theRuta.toJSON(),
+          fecha_entrega: DateTime.fromJSDate(theRuta.fecha_entrega).toFormat('yyyy-MM-dd'),
+        };
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
           const page = request.input('page', 1);
           const perPage = request.input("per_page", 20);
-          return await Ruta.query().paginate(page, perPage);
+
+          // Obtener datos paginados
+          const paginatedRutas = await Ruta.query().paginate(page, perPage);
+
+          // Formatear fechas después de obtener los datos
+          const formattedRutas = paginatedRutas.toJSON();
+          formattedRutas.data = formattedRutas.data.map(Ruta => ({
+            ...Ruta,
+            fecha_entrega: DateTime.fromJSDate(new Date(Ruta.fecha_entrega)).toFormat('yyyy-MM-dd'),
+          }));
+
+          return formattedRutas;
         } else {
-          return await Ruta.query();
+          // Consultar todos los Rutas y formatear fechas
+          const Rutas = await Ruta.query();
+          return Rutas.map(Ruta => ({
+            ...Ruta.toJSON(),
+            fecha_entrega: DateTime.fromJSDate(new Date(Ruta.fecha_entrega)).toFormat('yyyy-MM-dd'),
+          }));
         }
       }
     } catch (error) {

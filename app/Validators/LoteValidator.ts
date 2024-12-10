@@ -11,9 +11,6 @@ export default class LoteValidator {
     dir_lista_orden_id: schema.number([
       rules.exists({ table: 'dir_lista_ordenes', column: 'id' }), rules.required() 
     ]),
-    /* lote_id: schema.number([
-      rules.exists({ table: 'lotes', column: 'id' }), rules.required() 
-    ]) */
   })
 
   
