@@ -15,8 +15,8 @@ export default class TurnosController {
         // Formatear fechas antes de devolver
         return {
           ...theTurno.toJSON(),
-          fecha_inicio: DateTime.fromJSDate(theTurno.fecha_inicio).toFormat('yyyy-MM-dd'),
-          fecha_fin: DateTime.fromJSDate(theTurno.fecha_fin).toFormat('yyyy-MM-dd'),
+          fecha_inicio: DateTime.fromJSDate(new Date(theTurno.fecha_inicio)).toFormat('yyyy-MM-dd'),
+            fecha_fin: DateTime.fromJSDate(new Date(theTurno.fecha_fin)).toFormat('yyyy-MM-dd'),
         };
       } else {
         const data = request.all();
@@ -34,11 +34,12 @@ export default class TurnosController {
             fecha_inicio: DateTime.fromJSDate(new Date(turno.fecha_inicio)).toFormat('yyyy-MM-dd'),
             fecha_fin: DateTime.fromJSDate(new Date(turno.fecha_fin)).toFormat('yyyy-MM-dd'),
           }));
-
+          
           return formattedTurnos;
         } else {
           // Consultar todos los turnos y formatear fechas
           const turnos = await Turno.query();
+          
           return turnos.map(turno => ({
             ...turno.toJSON(),
             fecha_inicio: DateTime.fromJSDate(new Date(turno.fecha_inicio)).toFormat('yyyy-MM-dd'),

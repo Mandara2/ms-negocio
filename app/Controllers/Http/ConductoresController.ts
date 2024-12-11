@@ -9,49 +9,55 @@ import Conductor from 'App/Models/Conductor';
 
 export default class ConductoresController {
   // Método de búsqueda
-  public async find({ request, params }: HttpContextContract) {
-    try {
-      if (params.id) {
-        const theConductor = await Conductor.findOrFail(params.id);
+public async find({ request, params }: HttpContextContract) {
+  try {
+    if (params.id) {
+      const theConductor = await Conductor.findOrFail(params.id);
 
-        // Formatear fechas antes de devolver
-        return {
-          ...theConductor.toJSON(),
-          fecha_inicio: DateTime.fromJSDate(theConductor.fecha_vencimiento_licencia).toFormat('yyyy-MM-dd'),
-          fecha_fin: DateTime.fromJSDate(theConductor.fecha_nacimiento).toFormat('yyyy-MM-dd'),
-        };
+      console.log("1");
+      console.log(theConductor);
+      
+      return {
+        ...theConductor.toJSON(),
+        fecha_vencimiento_licencia: DateTime.fromJSDate(new Date(theConductor.fecha_vencimiento_licencia)).toFormat('yyyy-MM-dd'),
+        fecha_nacimiento: DateTime.fromJSDate(new Date(theConductor.fecha_nacimiento)).toFormat('yyyy-MM-dd'),
+      };
+    } else {
+      const data = request.all();
+      if ("page" in data && "per_page" in data) {
+        const page = request.input('page', 1);
+        const perPage = request.input("per_page", 20);
+
+        // Obtener datos paginados
+        const paginatedConductors = await Conductor.query().paginate(page, perPage);
+
+        // Formatear fechas después de obtener los datos
+        const formattedConductors = paginatedConductors.toJSON();
+        formattedConductors.data = formattedConductors.data.map(Conductor => ({
+          ...Conductor,
+          fecha_vencimiento_licencia: DateTime.fromJSDate(new Date(Conductor.fecha_inicio)).toFormat('yyyy-MM-dd'),
+          fecha_nacimiento: DateTime.fromJSDate(new Date(Conductor.fecha_fin)).toFormat('yyyy-MM-dd'),
+        }));
+        console.log("2");
+        
+        return formattedConductors;
       } else {
-        const data = request.all();
-        if ("page" in data && "per_page" in data) {
-          const page = request.input('page', 1);
-          const perPage = request.input("per_page", 20);
-
-          // Obtener datos paginados
-          const paginatedConductors = await Conductor.query().paginate(page, perPage);
-
-          // Formatear fechas después de obtener los datos
-          const formattedConductors = paginatedConductors.toJSON();
-          formattedConductors.data = formattedConductors.data.map(Conductor => ({
-            ...Conductor,
-            fecha_vencimiento_licencia: DateTime.fromJSDate(new Date(Conductor.fecha_inicio)).toFormat('yyyy-MM-dd'),
-            fecha_nacimiento: DateTime.fromJSDate(new Date(Conductor.fecha_fin)).toFormat('yyyy-MM-dd'),
-          }));
-
-          return formattedConductors;
-        } else {
-          // Consultar todos los Conductors y formatear fechas
-          const Conductors = await Conductor.query();
-          return Conductors.map(Conductor => ({
-            ...Conductor.toJSON(),
-            fecha_vencimiento_licencia: DateTime.fromJSDate(new Date(Conductor.fecha_vencimiento_licencia)).toFormat('yyyy-MM-dd'),
-            fecha_nacimiento: DateTime.fromJSDate(new Date(Conductor.fecha_nacimiento)).toFormat('yyyy-MM-dd'),
-          }));
-        }
+        // Consultar todos los Conductors y formatear fechas
+        const Conductors = await Conductor.query();
+        console.log("3");
+        
+        return Conductors.map(Conductor => ({
+          ...Conductor.toJSON(),
+          fecha_vencimiento_licencia: DateTime.fromJSDate(new Date(Conductor.fecha_vencimiento_licencia)).toFormat('yyyy-MM-dd'),
+          fecha_nacimiento: DateTime.fromJSDate(new Date(Conductor.fecha_nacimiento)).toFormat('yyyy-MM-dd'),
+        }));
       }
-    } catch (error) {
-      throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
     }
+  } catch (error) {
+    throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
   }
+}
+
 
   // Método para crear un conductor
   public async create({ request, response }: HttpContextContract) {
