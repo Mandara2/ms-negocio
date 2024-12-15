@@ -1,7 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Clientes from 'App/Models/Cliente';
-import axios from 'axios';
-import Env from '@ioc:Adonis/Core/Env';
 import { Exception } from '@adonisjs/core/build/standalone';
 import ClienteValidator from 'App/Validators/ClienteValidator'; // Importar el validador
 
@@ -15,15 +13,9 @@ export default class ClientesController {
         theCliente = await Clientes.findOrFail(params.id);
 
         // Llamada al microservicio de usuarios
-        const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${theCliente.usuario_id}`, {
-          headers: { Authorization: request.headers().authorization || '' }
-        });
+        
 
-        if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-          throw new Exception('No se encontró información de usuario en el microservicio', 404);
-        }
-
-        return { cliente: theCliente, usuario: userResponse.data };
+        return theCliente;
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
@@ -44,17 +36,6 @@ export default class ClientesController {
     try {
       // Validar datos usando el ClienteValidator
       const payload = await request.validate(ClienteValidator);
-      const body = request.body();
-
-      // Llamada al microservicio de usuarios
-      const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${body.usuario_id}`, {
-        headers: { Authorization: request.headers().authorization || '' }
-      });
-
-      // Verificar si no se encontró información del usuario en el microservicio
-      if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-        return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
-      }
 
       // Crear el cliente si la validación y la verificación de usuario son exitosas
       const theCliente = await Clientes.create({
@@ -90,16 +71,6 @@ export default class ClientesController {
 
     // Obtener el cliente y preparar la respuesta del usuario
     const theCliente = await Clientes.findOrFail(params.id);
-    const body = request.body();
-
-    // Verificar la existencia del usuario en el microservicio
-    const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${body.usuario_id}`, {
-      headers: { Authorization: request.headers().authorization || '' }
-    });
-
-    if (!userResponse.data || Object.keys(userResponse.data).length === 0) {
-      return response.notFound({ error: 'No se encontró información de usuario, verifique que el código sea correcto' });
-    }
 
     // Actualizar los datos del cliente con los datos validados
     theCliente.merge(payload);

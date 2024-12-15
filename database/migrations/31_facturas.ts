@@ -12,7 +12,7 @@ export default class extends BaseSchema {
       table.string('estado').notNullable().defaultTo('PENDIENTE')
       table.string('detalles')
       table.integer('cuota_id').unsigned().references('cuotas.id');
-      table.integer('gastos_id').unsigned().references('gastos.id');
+      table.integer('gasto_id').unsigned().references('gastos.id');
       table.timestamp("created_at", { useTz: true });
       table.timestamp("updated_at", { useTz: true });
     });

@@ -12,14 +12,20 @@ export default class CategoriaProductosController {
         let theCategoriaProducto: CategoriaProducto = await CategoriaProducto.findOrFail(params.id);
         await theCategoriaProducto.load('categoria');
         await theCategoriaProducto.load('producto');
+        console.log(theCategoriaProducto);
+        
         return theCategoriaProducto;
       } else {
         const data = request.all();
         if ('page' in data && 'per_page' in data) {
           const page = request.input('page', 1);
-          const perPage = request.input('per_page', 20);
+          const perPage = request.input('per_page', 20);  
+          console.log(await CategoriaProducto.query().paginate(page, perPage));
+          
           return await CategoriaProducto.query().paginate(page, perPage); // Devuelve una fracción de todas las CategoriaProductos
         } else {
+          console.log(await CategoriaProducto.query());
+          
           return await CategoriaProducto.query(); // Devuelve todas las CategoriaProductos si no se especifica el ID
         }
       }

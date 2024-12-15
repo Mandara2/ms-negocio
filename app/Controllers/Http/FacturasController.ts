@@ -139,7 +139,7 @@ export default class FacturasController {
       theFactura.estado = payload.estado;
       theFactura.detalles = payload.detalles;
       theFactura.cuota_id = payload.cuota_id;
-      theFactura.gastos_id = payload.cuota_id;
+      theFactura.gasto_id = payload.cuota_id;
       return await theFactura.save();
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible

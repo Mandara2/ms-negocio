@@ -32,8 +32,11 @@ export default class DuenosController { //se encarga de hacer las operaciones de
             error: 'No se encontró información de usuario, verifique que el código sea correcto',
           });
         }
-
+        console.log("thedueno");
+        
         // Combinar la respuesta con los datos del cliente
+        console.log(theDueno);
+        
         return { theDueno: formattedDueno, usuario: userResponse.data };
       } else {
         const data = request.all();
@@ -50,7 +53,10 @@ export default class DuenosController { //se encarga de hacer las operaciones de
             ...dueno,
             fecha_nacimiento: DateTime.fromJSDate(new Date(dueno.fecha_nacimiento)).toFormat('yyyy-MM-dd'),
           }));
-
+          console.log("Formated");
+          
+          console.log(formattedDuenos);
+          
           return formattedDuenos;
         } else {
           // Consultar todos los dueños y formatear las fechas de nacimiento
