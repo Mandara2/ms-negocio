@@ -25,45 +25,15 @@ export default class FacturasController {
       await factura.save();
 
       // Devolver una respuesta exitosa
-      return response
-        .status(200)
-        .json({
-          success: true,
-          message: "Estado de factura actualizado correctamente",
-        });
+      return response.status(200).json({
+        success: true,
+        message: "Estado de factura actualizado correctamente",
+      });
     } catch (error) {
-      return response
-        .status(500)
-        .json({
-          error: "Error al actualizar el estado de la factura",
-          details: error.message,
-        });
-    }
-  }
-
-  // Método para verificar si una factura existe
-  public async verificarFactura({ params, response }: HttpContextContract) {
-    try {
-      const facturaId = params.id;
-      const factura = await Factura.find(facturaId);
-
-      if (!factura) {
-        return response.status(404).json({ error: "Factura no encontrada" });
-      }
-
-      if (factura.estado === "PAGADO") {
-        return response
-          .status(400)
-          .json({ error: "Factura ya está en estado 'PAGADO'" });
-      }
-
-      return response
-        .status(200)
-        .json({ success: true, message: "Factura válida" });
-    } catch (error) {
-      return response
-        .status(500)
-        .json({ error: "Error al verificar la factura" });
+      return response.status(500).json({
+        error: "Error al actualizar el estado de la factura",
+        details: error.message,
+      });
     }
   }
 
