@@ -10,6 +10,8 @@ export default class extends BaseSchema {
       table.double('distancia_total').notNullable()
       table.double('costo_total').notNullable()
       table.integer('cliente_id').unsigned().references("clientes.id").notNullable().onDelete('CASCADE')
+      table.double('longitude')
+      table.double('latitude')
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

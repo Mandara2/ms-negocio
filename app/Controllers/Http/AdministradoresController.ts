@@ -13,6 +13,8 @@ export default class AdministradoresController {
     try {
       if (params.id) {
         theAdministrador = await Administrador.findOrFail(params.id);
+        console.log(params.id)
+        console.log(theAdministrador.usuario_id)
 
         // Llamada al microservicio de usuarios
         const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${theAdministrador.usuario_id}`, {

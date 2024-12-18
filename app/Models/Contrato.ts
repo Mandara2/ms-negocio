@@ -20,6 +20,12 @@ export default class Contrato extends BaseModel {
   public costo_total: number
 
   @column()
+  public latitude: number | null
+
+  @column()
+  public longitude: number | null 
+
+  @column()
   public cliente_id: number
 
   @column.dateTime({ autoCreate: true })

@@ -7,6 +7,7 @@ import Env from '@ioc:Adonis/Core/Env';
 import Ruta from 'App/Models/Ruta';
 import { DateTime } from 'luxon';
 import PersonaNatural from 'App/Models/PersonaNatural';
+import Ws from 'App/services/Ws';
 
 export default class ContratosController {
   // Método de búsqueda
@@ -170,4 +171,61 @@ export default class ContratosController {
     response.status(204);
     return await theContrato.delete();
   }
+
+  // Método para actualizar únicamente las coordenadas de un Contrato
+  public async updateCoordinates({ params, request, response }: HttpContextContract) {
+    try {
+      // Validar que la solicitud solo contenga longitude y latitude
+      const { longitude, latitude } = request.only(['longitude', 'latitude']);
+
+      // Validar que latitude y longitude no estén vacíos
+      if (longitude === undefined || latitude === undefined) {
+        return response.badRequest({ message: 'Longitude y latitude son obligatorios' });
+      }
+
+      // Validar que sean números válidos
+      const longitudeNum = parseFloat(longitude);
+      const latitudeNum = parseFloat(latitude);
+
+      if (isNaN(longitudeNum) || isNaN(latitudeNum)) {
+        return response.badRequest({ message: 'Longitude y latitude deben ser números válidos' });
+      }
+
+      // Validar rangos de longitud y latitud
+      if (latitudeNum < -90 || latitudeNum > 90) {
+        return response.badRequest({ message: 'Latitude debe estar entre -90 y 90 grados' });
+      }
+
+      if (longitudeNum < -180 || longitudeNum > 180) {
+        return response.badRequest({ message: 'Longitude debe estar entre -180 y 180 grados' });
+      }
+
+      // Buscar el contrato por ID
+      const contrato = await Contrato.findOrFail(params.id);
+
+      // Actualizar solo los campos longitude y latitude
+      contrato.merge({ longitude: longitudeNum, latitude: latitudeNum });
+
+      // Guardar cambios en la base de datos
+      await contrato.save();
+
+      console.log(contrato.latitude, contrato.longitude);
+
+      // Emitir evento en un canal específico para el contrato
+      Ws.io.emit(`coordinates/${contrato.id}`, {
+        id: contrato.id,
+        longitude,
+        latitude,
+      })
+      
+
+      // Responder con los datos actualizados
+      return response.ok({ message: 'Coordenadas actualizadas correctamente', contrato });
+      
+    } catch (error) {
+      // Manejar errores, incluyendo si el contrato no se encuentra
+      throw new Exception(error.message || 'Error al actualizar las coordenadas', error.status || 500);
+    }
+  }
+
 }
