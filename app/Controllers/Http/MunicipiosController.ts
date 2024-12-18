@@ -39,7 +39,7 @@ export default class MunicipiosController {
     try {
       // Validar datos usando el MunicipioValidator
       const payload = await request.validate(MunicipioValidator);
-
+      
       // Crear el municipio si la validación es exitosa
       const theMunicipio = await Municipio.create(payload);
       return theMunicipio;

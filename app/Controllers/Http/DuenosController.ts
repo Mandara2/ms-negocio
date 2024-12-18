@@ -80,6 +80,18 @@ export default class DuenosController { //se encarga de hacer las operaciones de
         const body = request.body();
         const payload = await request.validate(DuenoValidator);
 
+        if (payload.conductor_id) {
+                const existe = await Dueno.query()
+                  .where('conductor_id', payload.conductor_id)
+                  .first();
+          
+                if (existe) {
+                  return response.conflict({
+                    error: 'El conductor ya está asignado',
+                  });
+                }
+              }
+
         const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${body.usuario_id}`, {
             headers: { Authorization: request.headers().authorization || '' }
           });
@@ -107,7 +119,18 @@ export default class DuenosController { //se encarga de hacer las operaciones de
         const body = request.body();
   
         const theDueno = await Dueno.findOrFail(params.id);
-  
+        if (payload.conductor_id) {
+              const existe = await Dueno.query()
+                .where('conductor_id', payload.conductor_id)
+                .andWhereNot('id', params.id) // Excluir el centro actual
+                .first();
+        
+              if (existe) {
+                return response.conflict({
+                  error: 'El conductor ya está asignado',
+                });
+              }
+            }
         // Llamada al microservicio de usuarios para verificar el ID del usuario
         const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${body.usuario_id}`, {
           headers: { Authorization: request.headers().authorization || '' }

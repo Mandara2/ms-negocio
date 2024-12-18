@@ -34,6 +34,18 @@ export default class LotesController {
     try {
       // Validar datos usando el LoteValidator
       const payload = await request.validate(LoteValidator);
+      
+      if (payload.dir_lista_orden_id) {
+              const existe = await Lote.query()
+                .where('dir_lista_orden_id', payload.dir_lista_orden_id)
+                .first();
+        
+              if (existe) {
+                return response.conflict({
+                  error: 'El orden ya está asignada a otro centro de distribución',
+                });
+              }
+            }
 
       // Crear el Lote si la validación es exitosa
       const theLote = await Lote.create(payload);
@@ -56,6 +68,18 @@ export default class LotesController {
     try {
       // Validar los datos con LoteValidator
       payload = await request.validate(LoteValidator);
+      if (payload.dir_lista_orden_id) {
+            const existe = await Lote.query()
+              .where('dir_lista_orden_id', payload.dir_lista_orden_id)
+              .andWhereNot('id', params.id) // Excluir el centro actual
+              .first();
+      
+            if (existe) {
+              return response.conflict({
+                error: 'El orden ya está asignada a otro centro de distribución',
+              });
+            }
+          }
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {

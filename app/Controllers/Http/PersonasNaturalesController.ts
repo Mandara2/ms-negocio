@@ -57,6 +57,18 @@ export default class PersonasNaturalesController {
       const payload = await request.validate(PersonaNaturalValidator);
       const body = request.body();
 
+      if (payload.cliente_id) {
+        const existe = await PersonaNatural.query()
+          .where('cliente_id', payload.cliente_id)
+          .first();
+  
+        if (existe) {
+          return response.conflict({
+            error: 'El cliente ya está asignado a otra persona.',
+          });
+        }
+      }
+
       // Llamada al microservicio de usuarios
       const userResponse = await axios.get(`${Env.get('MS_SECURITY')}/api/users/${body.usuario_id}`, {
         headers: { Authorization: request.headers().authorization || '' }
@@ -92,6 +104,18 @@ export default class PersonasNaturalesController {
       const payload = await request.validate(PersonaNaturalValidator);
       const body = request.body();
 
+      if (payload.cliente_id) {
+            const existe = await PersonaNatural.query()
+              .where('cliente_id', payload.cliente_id)
+              .andWhereNot('id', params.id) // Excluir el centro actual
+              .first();
+      
+            if (existe) {
+              return response.conflict({
+                error: 'El cliente ya está asignado a otra persona',
+              });
+            }
+          }
       // Buscar la persona natural
       const thePersonaNatural = await PersonaNatural.findOrFail(params.id);
 

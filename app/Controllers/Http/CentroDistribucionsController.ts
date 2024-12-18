@@ -2,6 +2,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import CentroDistribucion from 'App/Models/CentroDistribucion';
 import { Exception } from '@adonisjs/core/build/standalone';
 import CentroDistribucionValidator from 'App/Validators/CentroDistribucionValidator'; // Importar el validador
+import Direccion from 'App/Models/Direccion';
 
 export default class CentroDistribucionsController {
   // Método de búsqueda
@@ -34,8 +35,27 @@ export default class CentroDistribucionsController {
       // Validar los datos utilizando el CentroDistribucionValidator
       const payload = await request.validate(CentroDistribucionValidator);
 
+      if (payload.direccion_id) {
+        const existe = await CentroDistribucion.query()
+          .where('direccion_id', payload.direccion_id)
+          .first();
+  
+        if (existe) {
+          return response.conflict({
+            error: 'La dirección ya está asignada a otro centro de distribución',
+          });
+        }
+      }
+
       // Crear el centro de distribución si la validación es exitosa
       const theCentroDistribucion = await CentroDistribucion.create(payload);
+
+      if(payload.direccion_id) {
+      
+          let theDireccion:Direccion = await Direccion.findOrFail(payload.direccion_id)
+          theCentroDistribucion.direccion_id = theDireccion.id
+          theCentroDistribucion.save()
+      }
       return theCentroDistribucion;
 
     } catch (error) {
@@ -50,11 +70,23 @@ export default class CentroDistribucionsController {
 
   // Método para actualizar un centro de distribución
   public async update({ params, request, response }: HttpContextContract) {
-    let payload;
-
     try {
-      // Validar los datos utilizando el CentroDistribucionValidator
-      payload = await request.validate(CentroDistribucionValidator);
+      const payload = await request.validate(CentroDistribucionValidator);
+
+    // Verificar si la dirección ya está asignada a otro centro
+    if (payload.direccion_id) {
+      const existe = await CentroDistribucion.query()
+        .where('direccion_id', payload.direccion_id)
+        .andWhereNot('id', params.id) // Excluir el centro actual
+        .first();
+
+      if (existe) {
+        return response.conflict({
+          error: 'La dirección ya está asignada a otro centro de distribución',
+        });
+      }
+    }
+      
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible
       if (error.messages) {
@@ -66,8 +98,9 @@ export default class CentroDistribucionsController {
 
     // Obtener el centro de distribución y actualizar los datos
     const theCentroDistribucion = await CentroDistribucion.findOrFail(params.id);
+    let payload = await request.validate(CentroDistribucionValidator);
     theCentroDistribucion.nombre = payload.nombre;
-    theCentroDistribucion.capacidad_almacenamiento = payload.capacidadAlmacenamiento;
+    theCentroDistribucion.capacidad_almacenamiento = payload.capacidad_almacenamiento;
     theCentroDistribucion.direccion_id = payload.direccion_id;
     return await theCentroDistribucion.save();
   }
