@@ -99,14 +99,40 @@ export default class FacturasController {
   // Método para crear una Factura
   public async create({ request, response }: HttpContextContract) {
     try {
+      const body = request.body()
       // Validar los datos utilizando el validador de Factura
       const payload = await request.validate(FacturaValidator);
+
+      if (payload.cuota_id) {
+        const existe = await Factura.query()
+          .where('cuota_id', payload.cuota_id)
+          .first();
+  
+        if (existe) {
+          return response.conflict({
+            error: 'La cuota ya está asignada a otra factura',
+          });
+        }
+      }
+
+      if (body.gasto_id) {
+        const existe = await Factura.query()
+          .where('gasto_id', body.gasto_id)
+          .first();
+  
+        if (existe) {
+          return response.conflict({
+            error: 'El gasto ya está asignado a otra factura',
+          });
+        }
+      }
 
       const fecha_hora = payload.fecha_hora.toJSDate();
 
       const theFactura = await Factura.create({
         ...payload,
         fecha_hora: fecha_hora,
+        gasto_id: body.gasto_id
       });
 
       return theFactura;
@@ -126,10 +152,34 @@ export default class FacturasController {
   // Método para actualizar una Factura
   public async update({ params, request, response }: HttpContextContract) {
     let payload;
-
+    const body = request.body()
     try {
       // Validar los datos utilizando el validador de Factura
       payload = await request.validate(FacturaValidator);
+
+      if (payload.cuota_id) {
+              const existe = await Factura.query()
+                .where('cuota_id', payload.cuota_id)
+                .first();
+        
+              if (existe) {
+                return response.conflict({
+                  error: 'La cuota ya está asignada a otra factura',
+                });
+              }
+            }
+
+      if (body.gasto_id) {
+              const existe = await Factura.query()
+                .where('gasto_id', body.gasto_id)
+                .first();
+        
+              if (existe) {
+                return response.conflict({
+                  error: 'El gasto ya está asignado a otra factura',
+                });
+              }
+            }
 
       // Obtener la Factura y actualizar los datos
       const theFactura: Factura = await Factura.findOrFail(params.id);
@@ -139,7 +189,7 @@ export default class FacturasController {
       theFactura.estado = payload.estado;
       theFactura.detalles = payload.detalles;
       theFactura.cuota_id = payload.cuota_id;
-      theFactura.gastos_id = payload.gastos_id;
+      theFactura.gasto_id = payload.gasto_id;
       return await theFactura.save();
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible

@@ -6,4 +6,4 @@ Route.group(() => {
     Route.put("/contratos/:id", "ContratosController.update");
     Route.delete("/contratos/:id", "ContratosController.delete");
     Route.patch("/contratos/:id","ContratosController.updateCoordinates")
-}).middleware(['security'])
+})//.middleware(['security'])
