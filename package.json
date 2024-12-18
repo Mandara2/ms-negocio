@@ -29,6 +29,7 @@
     "luxon": "^3.5.0",
     "ms-negocio": "file:",
     "mysql2": "^3.11.3",
+    "ngx-socket-io": "^4.8.1",
     "proxy-addr": "^2.0.7",
     "reflect-metadata": "^0.2.2",
     "socket.io": "^4.8.1",
