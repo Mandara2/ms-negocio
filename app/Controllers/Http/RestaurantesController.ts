@@ -37,6 +37,18 @@ export default class RestaurantesController {
       // Validar los datos utilizando el validador de Restaurante
       const payload = await request.validate(RestauranteValidator);
 
+      if (payload.servicio_id) {
+              const existe = await Restaurante.query()
+                .where('servicio_id', payload.servicio_id)
+                .first();
+        
+              if (existe) {
+                return response.conflict({
+                  error: 'El servicio ya está asignado a otro restaurante',
+                });
+              }
+            }
+
       // Crear la Restaurante si la validación es exitosa
       const theRestaurante = await Restaurante.create(payload);
       return theRestaurante;
@@ -60,6 +72,19 @@ export default class RestaurantesController {
     try {
       // Validar los datos utilizando el validador de Restaurante
       payload = await request.validate(RestauranteValidator);
+
+      if (payload.servicio_id) {
+            const existe = await Restaurante.query()
+              .where('servicio_id', payload.servicio_id)
+              .andWhereNot('id', params.id) // Excluir el centro actual
+              .first();
+      
+            if (existe) {
+              return response.conflict({
+                error: 'El servicio ya está asignado a otro restaurante',
+              });
+            }
+          }
 
       // Obtener la Restaurante y actualizar los datos
       const theRestaurante: Restaurante = await Restaurante.findOrFail(

@@ -55,6 +55,18 @@ export default class ServiciosController {
       // Validar los datos utilizando el validador de Servicio
       const payload = await request.validate(ServicioValidator);
 
+      if (payload.administrador_id) {
+              const existe = await Servicio.query()
+                .where('administrador_id', payload.administrador_id)
+                .first();
+        
+              if (existe) {
+                return response.conflict({
+                  error: 'El administrador ya está asignado a otro servicio',
+                });
+              }
+            }
+
       // Crear la Servicio si la validación es exitosa
       const fecha_date = payload.fecha.toJSDate();
           
@@ -86,6 +98,19 @@ export default class ServiciosController {
     try {
       // Validar los datos utilizando el validador de Servicio
       payload = await request.validate(ServicioValidator);
+
+      if (payload.administrador_id) {
+            const existe = await Servicio.query()
+              .where('administrador_id', payload.administrador_id)
+              .andWhereNot('id', params.id) // Excluir el centro actual
+              .first();
+      
+            if (existe) {
+              return response.conflict({
+                error: 'El administrador ya está asignado a otro servicio',
+              });
+            }
+          }
 
       // Obtener la Servicio y actualizar los datos
       const theServicio: Servicio = await Servicio.findOrFail(params.id)

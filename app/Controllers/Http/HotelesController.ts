@@ -30,7 +30,20 @@ export default class HotelsController {
         try {
           // Validar los datos utilizando el validador de Hotel
           const payload = await request.validate(HotelValidator);
-    
+          
+          if (payload.servicio_id) {
+                  const existe = await Hotel.query()
+                    .where('servicio_id', payload.servicio_id)
+                    .first();
+            
+                  if (existe) {
+                    return response.conflict({
+                      error: 'El servicio ya está asignado a otro centro de distribución',
+                    });
+                  }
+                }
+          
+
           // Crear la Hotel si la validación es exitosa
           const theHotel = await Hotel.create(payload);
           return theHotel;
@@ -52,7 +65,20 @@ export default class HotelsController {
         try {
           // Validar los datos utilizando el validador de Hotel
           payload = await request.validate(HotelValidator);
-    
+          
+          if (payload.servicio_id) {
+                const existe = await Hotel.query()
+                  .where('servicio_id', payload.servicio_id)
+                  .andWhereNot('id', params.id) // Excluir el centro actual
+                  .first();
+          
+                if (existe) {
+                  return response.conflict({
+                    error: 'El servicio ya está asignada a otro centro de distribución',
+                  });
+                }
+              }
+
           // Obtener la Hotel y actualizar los datos
           const theHotel: Hotel = await Hotel.findOrFail(params.id);
           theHotel.nombre = payload.nombre;

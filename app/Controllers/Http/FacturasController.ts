@@ -5,36 +5,35 @@ import FacturaValidator from "App/Validators/FacturaValidator";
 import { DateTime } from "luxon";
 
 export default class FacturasController {
-  // Método para verificar si una factura existe
-  public async checkFacturaExists({ params, response }: HttpContextContract) {
+  public async actualizarEstado({
+    params,
+    request,
+    response,
+  }: HttpContextContract) {
     try {
-      const facturaId = params.id; // Obtiene el ID de la factura desde los parámetros de la URL
+      const facturaId = params.id; // ID de la factura desde los parámetros de la URL
+      const { estado } = request.only(["estado"]); // Recibe el estado desde el cuerpo de la solicitud
 
       // Verificar si la factura existe
       const factura = await Factura.find(facturaId);
-
       if (!factura) {
-        // Si no existe, devolver un error 404
         return response.status(404).json({ error: "Factura no encontrada" });
       }
 
-      // Si la factura ya está en estado "PAGADO", devolver un error 404
-      if (factura.estado === "PAGADO") {
-        return response.status(404).json({ error: "Factura ya está en estado 'PAGADO'" });
-      }
-
-      // Si la factura existe y no está en "PAGADO", actualizar su estado a "PAGADO"
-      factura.estado = "PAGADO";
+      // Actualizar el estado de la factura
+      factura.estado = estado;
       await factura.save();
 
-      // Devolver una respuesta indicando que la factura se actualizó a "PAGADO"
-      return response
-        .status(200)
-        .json({ success: true, message: "Factura encontrada y actualizada a 'PAGADO'" });
+      // Devolver una respuesta exitosa
+      return response.status(200).json({
+        success: true,
+        message: "Estado de factura actualizado correctamente",
+      });
     } catch (error) {
-      return response
-        .status(500)
-        .json({ error: "Error al verificar y actualizar la factura" });
+      return response.status(500).json({
+        error: "Error al actualizar el estado de la factura",
+        details: error.message,
+      });
     }
   }
 
@@ -43,43 +42,57 @@ export default class FacturasController {
     try {
       if (params.id) {
         const theFactura = await Factura.findOrFail(params.id);
-        await theFactura.load('cuota');
-        await theFactura.load('gasto');
+        await theFactura.load("cuota");
+        await theFactura.load("gasto");
 
         // Formatear fechas antes de devolver
         return {
           ...theFactura.toJSON(),
-          fecha_hora: DateTime.fromJSDate(theFactura.fecha_hora).toFormat('yyyy-MM-dd'),
+          fecha_hora: DateTime.fromJSDate(theFactura.fecha_hora).toFormat(
+            "yyyy-MM-dd"
+          ),
         };
       } else {
         const data = request.all();
         if ("page" in data && "per_page" in data) {
-          const page = request.input('page', 1);
+          const page = request.input("page", 1);
           const perPage = request.input("per_page", 20);
 
           // Obtener datos paginados
-          const paginatedFacturas = await Factura.query().paginate(page, perPage);
+          const paginatedFacturas = await Factura.query().paginate(
+            page,
+            perPage
+          );
 
           // Formatear fechas después de obtener los datos
           const formattedFacturas = paginatedFacturas.toJSON();
-          formattedFacturas.data = formattedFacturas.data.map(Factura => ({
+          formattedFacturas.data = formattedFacturas.data.map((Factura) => ({
             ...Factura,
-            fecha_inicio: DateTime.fromJSDate(new Date(Factura.fecha_inicio)).toFormat('yyyy-MM-dd'),
-            fecha_fin: DateTime.fromJSDate(new Date(Factura.fecha_fin)).toFormat('yyyy-MM-dd'),
+            fecha_inicio: DateTime.fromJSDate(
+              new Date(Factura.fecha_inicio)
+            ).toFormat("yyyy-MM-dd"),
+            fecha_fin: DateTime.fromJSDate(
+              new Date(Factura.fecha_fin)
+            ).toFormat("yyyy-MM-dd"),
           }));
 
           return formattedFacturas;
         } else {
           // Consultar todos los Facturas y formatear fechas
           const Facturas = await Factura.query();
-          return Facturas.map(Factura => ({
+          return Facturas.map((Factura) => ({
             ...Factura.toJSON(),
-            fecha_hora: DateTime.fromJSDate(new Date(Factura.fecha_hora)).toFormat('yyyy-MM-dd'),
+            fecha_hora: DateTime.fromJSDate(
+              new Date(Factura.fecha_hora)
+            ).toFormat("yyyy-MM-dd"),
           }));
         }
       }
     } catch (error) {
-      throw new Exception(error.message || 'Error al procesar la solicitud', error.status || 500);
+      throw new Exception(
+        error.message || "Error al procesar la solicitud",
+        error.status || 500
+      );
     }
   }
 
@@ -126,7 +139,7 @@ export default class FacturasController {
       theFactura.estado = payload.estado;
       theFactura.detalles = payload.detalles;
       theFactura.cuota_id = payload.cuota_id;
-      theFactura.gastos_id = payload.cuota_id;
+      theFactura.gastos_id = payload.gastos_id;
       return await theFactura.save();
     } catch (error) {
       // Si el error es de validación, devolver los mensajes de error de forma legible

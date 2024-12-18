@@ -11,7 +11,8 @@ export default class MunicipioValidator {
     codigo_postal: schema.string([rules.required(), rules.regex(/^[0-9]+$/)]),  // Asegura que el string contenga solo números
     departamento_id: schema.number([
       rules.exists({ table: 'departamentos', column: 'id' }), rules.required() 
-    ])
+    ]),
+    
   })
 
   public messages: CustomMessages = {

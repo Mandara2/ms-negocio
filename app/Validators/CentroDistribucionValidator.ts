@@ -5,6 +5,7 @@ export default class CentroDistribucionValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
+    id:schema.number.optional(),
     nombre:schema.string([rules.alphaNum({
       allow: ['space']
     }), rules.required()]),

@@ -16,7 +16,7 @@ export default class CentroDistribucion extends BaseModel {
   public capacidad_almacenamiento: number
 
   @column()
-  public direccion_id: number
+  public direccion_id: number | null
 
   @belongsTo(() => Direccion, {
     foreignKey: 'direccion_id'
